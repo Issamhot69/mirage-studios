@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Mirage Studios</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    body { padding-top: 70px; }
+    .dashboard { padding: 2rem 3rem; max-width: 1400px; margin: 0 auto; }
+
+    .dash-header { margin-bottom: 2rem; }
+    .dash-header h1 { font-size: 1.8rem; font-weight: 700; }
+    .dash-header p { color: var(--text-secondary); margin-top: 0.3rem; }
+
+    /* KPI Row */
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .kpi-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.3rem 1.5rem;
+    }
+    .kpi-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; }
+    .kpi-value { font-size: 2rem; font-weight: 800; margin: 0.3rem 0; }
+    .kpi-value.purple { color: var(--accent); }
+    .kpi-value.green { color: #4ade80; }
+    .kpi-value.blue { color: #60a5fa; }
+    .kpi-value.orange { color: #fb923c; }
+    .kpi-delta { font-size: 0.78rem; color: var(--text-muted); }
+    .kpi-delta.up { color: #4ade80; }
+
+    /* Main Grid */
+    .dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+
+    /* Projects Table */
+    .panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .panel-header {
+      padding: 1rem 1.5rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .panel-header h3 { font-size: 0.95rem; font-weight: 600; }
+    .panel-action { font-size: 0.78rem; color: var(--accent); cursor: pointer; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--text-muted); padding: 0.75rem 1.5rem; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 0.85rem 1.5rem; font-size: 0.88rem; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .status-badge {
+      font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 600;
+    }
+    .status-active { background: rgba(74,222,128,0.1); color: #4ade80; }
+    .status-review { background: rgba(251,146,60,0.1); color: #fb923c; }
+    .status-draft { background: rgba(148,163,184,0.1); color: #94a3b8; }
+    .status-done { background: rgba(96,165,250,0.1); color: #60a5fa; }
+
+    /* Activity feed */
+    .activity-list { padding: 0.5rem 0; }
+    .activity-item {
+      padding: 0.8rem 1.5rem; display: flex; gap: 0.8rem; align-items: flex-start;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .activity-dot.purple { background: var(--accent); }
+    .activity-dot.green { background: #4ade80; }
+    .activity-dot.blue { background: #60a5fa; }
+    .activity-dot.orange { background: #fb923c; }
+    .activity-text { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.4; }
+    .activity-text strong { color: var(--text-primary); }
+    .activity-time { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    /* AI Module status */
+    .modules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .module-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.2rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .module-top { display: flex; justify-content: space-between; align-items: center; }
+    .module-name { font-size: 0.88rem; font-weight: 600; }
+    .module-status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80;
+      box-shadow: 0 0 6px #4ade80; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .module-metric { font-size: 0.75rem; color: var(--text-muted); }
+    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="logo-icon">◈</span>
+      <span class="logo-text">MIRAGE <span class="accent">STUDIOS</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../index.html">Accueil</a></li>
+      <li><a href="dashboard.html" style="color:var(--text-primary)">Dashboard</a></li>
+      <li><a href="project_view.html">Projets</a></li>
+      <li><a href="#" class="btn-nav">+ Nouveau</a></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard">
+
+    <div class="dash-header">
+      <h1>Dashboard IA</h1>
+      <p>Vue d'ensemble de la production — Mirage Studios</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Projets actifs</div>
+        <div class="kpi-value purple">7</div>
+        <div class="kpi-delta up">▲ +2 ce mois</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Scénarios générés</div>
+        <div class="kpi-value green">142</div>
+        <div class="kpi-delta up">▲ +18 cette semaine</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Shots VFX rendus</div>
+        <div class="kpi-value blue">1 840</div>
+        <div class="kpi-delta">Traitement : 4.2s / shot</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">ROI moyen prédit</div>
+        <div class="kpi-value orange">+124%</div>
+        <div class="kpi-delta up">▲ Modèle ML v2.1</div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="dash-grid">
+
+      <!-- Projects Table -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Projets en cours</h3>
+          <span class="panel-action">Voir tous →</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Projet</th>
+              <th>Genre</th>
+              <th>Avancement</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Mirage — L'Éveil</strong></td>
+              <td>Fantastique</td>
+              <td>68%</td>
+              <td><span class="status-badge status-active">Actif</span></td>
+            </tr>
+            <tr>
+              <td><strong>Signal Zéro</strong></td>
+              <td>Thriller</td>
+              <td>45%</td>
+              <td><span class="status-badge status-active">Actif</span></td>
+            </tr>
+            <tr>
+              <td><strong>La Dernière Noblesse</strong></td>
+              <td>Historique</td>
+              <td>89%</td>
+              <td><span class="status-badge status-review">Révision</span></td>
+            </tr>
+            <tr>
+              <td><strong>Mon Patron est un Robot</strong></td>
+              <td>Comédie</td>
+              <td>22%</td>
+              <td><span class="status-badge status-draft">Brouillon</span></td>
+            </tr>
+            <tr>
+              <td><strong>Les Fragments de Sophie</strong></td>
+              <td>Drame</td>
+              <td>100%</td>
+              <td><span class="status-badge status-done">Terminé</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Activity -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Activité récente</h3>
+          <span class="panel-action">Tout voir</span>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-dot purple"></div>
+            <div>
+              <div class="activity-text"><strong>ScriptAI</strong> a généré 3 nouvelles scènes pour Mirage — L'Éveil</div>
+              <div class="activity-time">Il y a 12 min</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot green"></div>
+            <div>
+              <div class="activity-text"><strong>VFX Pipeline</strong> — 24 shots rendus (SC042–SC065)</div>
+              <div class="activity-time">Il y a 34 min</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot blue"></div>
+            <div>
+              <div class="activity-text"><strong>TTS Engine</strong> — Doublage EN/ES exporté pour Signal Zéro</div>
+              <div class="activity-time">Il y a 1h</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot orange"></div>
+            <div>
+              <div class="activity-text"><strong>Prédiction ML</strong> — ROI +124% confirmé sur La Dernière Noblesse</div>
+              <div class="activity-time">Il y a 2h</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot purple"></div>
+            <div>
+              <div class="activity-text"><strong>Nouveau projet</strong> créé : Mon Patron est un Robot</div>
+              <div class="activity-time">Il y a 3h</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- AI Modules Status -->
+    <div class="panel" style="margin-bottom: 2rem;">
+      <div class="panel-header"><h3>État des modules IA</h3></div>
+      <div style="padding: 1.5rem;">
+        <div class="modules-grid">
+          <div class="module-card">
+            <div class="module-top">
+              <span class="module-name">📝 Script AI</span>
+              <div class="module-status-dot"></div>
+            </div>
+            <div class="module-metric">142 scénarios — modèle claude-3</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+          </div>
+          <div class="module-card">
+            <div class="module-top">
+              <span class="module-name">🎬 VFX Pipeline</span>
+              <div class="module-status-dot"></div>
+            </div>
+            <div class="module-metric">1 840 shots — Stable Diffusion XL</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
+          </div>
+          <div class="module-card">
+            <div class="module-top">
+              <span class="module-name">🎙️ TTS Doublage</span>
+              <div class="module-status-dot"></div>
+            </div>
+            <div class="module-metric">9 langues — ElevenLabs v3</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:91%"></div></div>
+          </div>
+          <div class="module-card">
+            <div class="module-top">
+              <span class="module-name">📊 Prédiction ML</span>
+              <div class="module-status-dot"></div>
+            </div>
+            <div class="module-metric">Modèle v2.1 — précision 84%</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:84%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../static/main.js"></script>
+</body>
+</html>

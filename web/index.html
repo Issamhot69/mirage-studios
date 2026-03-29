@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mirage Studios — Technologie IA</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="logo-icon">◈</span>
+      <span class="logo-text">MIRAGE <span class="accent">STUDIOS</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#features">Fonctionnalités</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="templates/dashboard.html">Dashboard</a></li>
+      <li><a href="templates/project_view.html">Projets</a></li>
+      <li><a href="#" class="btn-nav">Démo</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Technologie IA — Python Engineering</p>
+      <h1 class="hero-title">
+        Créez des films<br />
+        avec l'intelligence<br />
+        <span class="gradient-text">artificielle</span>
+      </h1>
+      <p class="hero-subtitle">
+        Pipeline complet de production cinématographique : scénario, VFX,
+        doublage et prédiction commerciale — entièrement automatisé par IA.
+      </p>
+      <div class="hero-cta">
+        <a href="templates/dashboard.html" class="btn-primary">Commencer le projet ↗</a>
+        <a href="#features" class="btn-secondary">Voir les modules</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="code-preview">
+        <div class="code-header">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="code-title">script_ai.py</span>
+        </div>
+        <pre class="code-body"><span class="kw">from</span> mirage <span class="kw">import</span> ScriptAI
+
+ai = ScriptAI(model=<span class="str">"claude-3"</span>)
+script = ai.generate_script(
+  genre=<span class="str">"fantastique"</span>,
+  duration=<span class="num">90</span>,
+  tone=<span class="str">"epic"</span>
+)
+<span class="comment"># ✓ Scénario généré en 4.2s</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="section-header">
+      <h2>Modules IA</h2>
+      <p>Quatre piliers technologiques pour une production complète</p>
+    </div>
+    <div class="features-grid">
+
+      <a href="#" class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Script AI <span class="arrow">↗</span></h3>
+        <p>Génération & analyse de scénarios par IA. Classification de genre, moteur de dialogues et export PDF format industrie.</p>
+        <div class="feature-tags">
+          <span>Claude API</span><span>NLP</span><span>FDX</span>
+        </div>
+      </a>
+
+      <a href="#" class="feature-card">
+        <div class="feature-icon">🎬</div>
+        <h3>VFX AI <span class="arrow">↗</span></h3>
+        <p>Effets visuels automatisés avec Python. Pipeline Stable Diffusion, composition multi-calques et rendu 4K.</p>
+        <div class="feature-tags">
+          <span>Stable Diffusion</span><span>Blender</span><span>4K</span>
+        </div>
+      </a>
+
+      <a href="#" class="feature-card">
+        <div class="feature-icon">🎙️</div>
+        <h3>Doublage <span class="arrow">↗</span></h3>
+        <p>Voix & traduction multilingue automatique. TTS émotionnel, lip-sync et export SRT pour 9 langues.</p>
+        <div class="feature-tags">
+          <span>ElevenLabs</span><span>DeepL</span><span>SRT</span>
+        </div>
+      </a>
+
+      <a href="#" class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Prédiction <span class="arrow">↗</span></h3>
+        <p>ML pour analyser le potentiel commercial. ROI, box-office estimé et segmentation audience par marché.</p>
+        <div class="feature-tags">
+          <span>scikit-learn</span><span>ML</span><span>ROI</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section class="architecture" id="architecture">
+    <div class="section-header">
+      <h2>Architecture du projet</h2>
+      <p>Structure modulaire Python — Racine du projet</p>
+    </div>
+    <div class="arch-container">
+      <div class="file-tree">
+        <div class="tree-root">mirage_studios/</div>
+        <div class="tree-branch">
+          <div class="tree-item folder">ai_engine/ <span class="badge badge-ai">IA</span></div>
+          <div class="tree-children">
+            <div class="tree-item folder">script_generator/</div>
+            <div class="tree-item file">script_ai.py</div>
+            <div class="tree-item file">genre_classifier.py</div>
+            <div class="tree-item file">dialogue_engine.py</div>
+            <div class="tree-item folder">vfx_generator/</div>
+            <div class="tree-item file">vfx_pipeline.py</div>
+            <div class="tree-item file">stable_diffusion.py</div>
+            <div class="tree-item folder">voice_dubbing/</div>
+            <div class="tree-item file">tts_engine.py</div>
+            <div class="tree-item file">multilang_translator.py</div>
+            <div class="tree-item folder">prediction/</div>
+            <div class="tree-item file">success_predictor.py</div>
+          </div>
+        </div>
+        <div class="tree-branch">
+          <div class="tree-item folder">web/ <span class="badge badge-ui">UI</span></div>
+          <div class="tree-children">
+            <div class="tree-item file">index.html</div>
+            <div class="tree-item file">style.css</div>
+            <div class="tree-item folder">templates/</div>
+            <div class="tree-item file">dashboard.html</div>
+          </div>
+        </div>
+        <div class="tree-branch">
+          <div class="tree-item folder">data/ <span class="badge badge-data">Data</span></div>
+          <div class="tree-children">
+            <div class="tree-item folder">movies_db/</div>
+            <div class="tree-item file">films.json</div>
+          </div>
+        </div>
+        <div class="tree-branch">
+          <div class="tree-item folder">api/</div>
+          <div class="tree-children">
+            <div class="tree-item file">app.py</div>
+            <div class="tree-item file">routes.py</div>
+          </div>
+        </div>
+      </div>
+      <div class="arch-stats">
+        <div class="stat-card"><span class="stat-num">18+</span><span class="stat-label">Modules Python</span></div>
+        <div class="stat-card"><span class="stat-num">9</span><span class="stat-label">Langues supportées</span></div>
+        <div class="stat-card"><span class="stat-num">5</span><span class="stat-label">Genres cinéma</span></div>
+        <div class="stat-card"><span class="stat-num">4K</span><span class="stat-label">Rendu VFX</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">MIRAGE <span class="accent">STUDIOS</span></span>
+      </div>
+      <p class="footer-tagline">Cinéma augmenté par l'intelligence artificielle.</p>
+      <p class="footer-copy">© 2025 Mirage Studios — Python Engineering</p>
+    </div>
+  </footer>
+
+  <script src="static/main.js"></script>
+</body>
+</html>

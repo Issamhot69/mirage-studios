@@ -1,0 +1,68 @@
+{
+  "VERSION": "2.0.0",
+  "APP_NAME": "Mirage Studios API",
+  "DEBUG": false,
+  "ANTHROPIC_API_KEY": "sk-ant-api03-...",
+  "REPLICATE_API_TOKEN": "r8_Whtny24AfwVNsbDuiP6RZPiwBzVUxfA38A54t",
+  "DID_API_KEY": "basice emFobm91bmlpc3NhbUBnbWFpbC5jb20:BeF0Txx6N-BDO0kty9L9G",
+  "STRIPE_PUBLIC_KEY": "pk_test_pk_test_51TEE8YDPFFQ9JDSH5mscUmUFBT0kYcaxKn8kcBDyuy07EsU7l2EexLgVMD5QNOQ6PCK84EWNFGuSegVckTkT4Kke00OPpH63dK",
+  "STRIPE_SECRET_KEY": "sk_test_sk_test_51TEE8YDPFFQ9JDSH4U3ieGYNeKhLmFnFwWtsq5o5da6lpMbb2eEqKd9jrUYho3Qv6Vt0xuEWYNM2eFGo61hll2u100H97Hoyw4",
+  "ALLOWED_ORIGINS": [
+    "http://localhost:3001",
+    "http://localhost:5001",
+    "http://localhost:5500",
+    "https://mirage-studios.app"
+  ],
+  "API_KEYS": {
+    "demo-key-2025": "user",
+    "producer-key-2025": "producer",
+    "admin-key-2025": "admin"
+  },
+  "AI_MODELS": {
+    "script": "claude-sonnet-4-20250514",
+    "classifier": "genre-classifier-v2",
+    "tts": "elevenlabs-v3",
+    "image": "stable-diffusion-xl-1.0",
+    "prediction": "mirage-ml-predictor-v2.1",
+    "video": "runway-gen3"
+  },
+  "CLAUDE": {
+    "model": "claude-sonnet-4-20250514",
+    "max_tokens": 1500,
+    "languages": ["fr", "en", "ar", "es", "de", "ja", "zh", "pt", "it"]
+  },
+  "VFX": {
+    "default_resolution": [1920, 1080],
+    "fps": 24,
+    "output_format": "exr",
+    "render_engine": "cpu",
+    "max_parallel_shots": 4
+  },
+  "TTS": {
+    "default_language": "fr",
+    "default_voice": "Narrator_FR",
+    "supported_languages": ["fr", "en", "es", "de", "ar", "ja", "zh", "pt", "it"],
+    "output_format": "mp3",
+    "sample_rate": 44100
+  },
+  "PREDICTION": {
+    "model_version": "2.1",
+    "confidence_threshold": 0.75,
+    "genres": ["fantastique", "thriller", "drame", "comedie", "historique", "action"]
+  },
+  "PATHS": {
+    "data": "data/",
+    "scripts": "data/scripts/",
+    "movies_db": "data/movies_db/films.json",
+    "models": "data/models/",
+    "renders": "renders/",
+    "audio": "audio/"
+  },
+  "RATE_LIMITS": {
+    "script_generate": "10/hour",
+    "vfx_render": "50/hour",
+    "tts_synthesize": "100/hour",
+    "prediction": "30/hour",
+    "claude_generate": "20/hour"
+  }
+}

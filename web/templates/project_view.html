@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet — Mirage Studios</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    body { padding-top: 70px; }
+    .project-page { padding: 2rem 3rem; max-width: 1200px; margin: 0 auto; }
+
+    .breadcrumb { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+    .project-hero {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2rem;
+      display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;
+    }
+    .project-badge {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      width: 70px; height: 70px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; flex-shrink: 0;
+    }
+    .project-info { flex: 1; }
+    .project-info h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .project-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin: 0.75rem 0; }
+    .meta-tag {
+      font-size: 0.75rem; padding: 0.25rem 0.7rem;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 20px; color: var(--text-secondary);
+    }
+    .project-desc { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; max-width: 600px; }
+    .project-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .btn-sm {
+      font-size: 0.83rem; padding: 0.5rem 1.1rem; border-radius: 7px;
+      cursor: pointer; border: none; font-weight: 600; transition: opacity 0.2s;
+    }
+    .btn-sm:hover { opacity: 0.85; }
+    .btn-primary-sm { background: var(--accent); color: white; }
+    .btn-outline-sm { background: transparent; border: 1px solid var(--border-accent); color: var(--text-primary); }
+
+    /* Progress */
+    .progress-section { margin-bottom: 2rem; }
+    .progress-section h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+    .step-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.2rem;
+    }
+    .step-card.done { border-color: rgba(74,222,128,0.3); }
+    .step-card.active { border-color: var(--border-accent); }
+    .step-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .step-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .step-pct { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .step-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .step-fill { height: 100%; border-radius: 2px; }
+    .fill-done { background: #4ade80; }
+    .fill-active { background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+    .fill-pending { background: var(--text-muted); width: 0%; }
+
+    /* Content Tabs */
+    .tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .tab {
+      padding: 0.75rem 1.5rem; font-size: 0.88rem; cursor: pointer;
+      color: var(--text-muted); border-bottom: 2px solid transparent;
+      transition: color 0.2s;
+    }
+    .tab.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+    .tab:hover { color: var(--text-secondary); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Script panel */
+    .script-panel {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.9;
+      color: var(--text-secondary); white-space: pre-wrap;
+    }
+    .script-panel .scene-heading { color: var(--text-primary); font-weight: 700; letter-spacing: 0.1em; }
+    .script-panel .action { color: var(--text-secondary); }
+    .script-panel .character { color: var(--accent); padding-left: 3rem; }
+    .script-panel .dialogue { padding-left: 2rem; color: #e2e8f0; }
+
+    /* Prediction panel */
+    .pred-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .pred-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.3rem; text-align: center;
+    }
+    .pred-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .pred-value { font-size: 1.7rem; font-weight: 800; }
+    .pred-range { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="logo-icon">◈</span>
+      <span class="logo-text">MIRAGE <span class="accent">STUDIOS</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../index.html">Accueil</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="project_view.html" style="color:var(--text-primary)">Projets</a></li>
+    </ul>
+  </nav>
+
+  <div class="project-page">
+
+    <div class="breadcrumb">
+      <a href="dashboard.html">Dashboard</a> / <a href="#">Projets</a> / Mirage — L'Éveil
+    </div>
+
+    <!-- Project Hero -->
+    <div class="project-hero">
+      <div class="project-badge">✨</div>
+      <div class="project-info">
+        <h1>Mirage — L'Éveil</h1>
+        <div class="project-meta">
+          <span class="meta-tag">Fantastique</span>
+          <span class="meta-tag">128 min</span>
+          <span class="meta-tag">Budget : 80M€</span>
+          <span class="meta-tag">Été 2026</span>
+          <span class="meta-tag status-badge status-active">Actif</span>
+        </div>
+        <p class="project-desc">
+          Dans le monde d'Aeloria, un jeune gardien découvre un artefact capable de briser l'équilibre magique.
+          Épopée fantastique en trois actes — IA utilisée pour scénario, VFX et doublage multilingue.
+        </p>
+        <div class="project-actions">
+          <button class="btn-sm btn-primary-sm">▶ Continuer en IA</button>
+          <button class="btn-sm btn-outline-sm">📄 Exporter PDF</button>
+          <button class="btn-sm btn-outline-sm">🎬 Voir VFX</button>
+          <button class="btn-sm btn-outline-sm">📊 Prédiction</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="progress-section">
+      <h2>Pipeline de production</h2>
+      <div class="steps-grid">
+        <div class="step-card done">
+          <div class="step-icon">📝</div>
+          <div class="step-name">Scénario IA</div>
+          <div class="step-pct">100%</div>
+          <div class="step-bar"><div class="step-fill fill-done" style="width:100%"></div></div>
+        </div>
+        <div class="step-card active">
+          <div class="step-icon">🎬</div>
+          <div class="step-name">VFX</div>
+          <div class="step-pct">68%</div>
+          <div class="step-bar"><div class="step-fill fill-active" style="width:68%"></div></div>
+        </div>
+        <div class="step-card active">
+          <div class="step-icon">🎙️</div>
+          <div class="step-name">Doublage</div>
+          <div class="step-pct">45%</div>
+          <div class="step-bar"><div class="step-fill fill-active" style="width:45%"></div></div>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">📊</div>
+          <div class="step-name">Validation ML</div>
+          <div class="step-pct">0%</div>
+          <div class="step-bar"><div class="step-fill fill-pending"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'script')">Scénario</div>
+      <div class="tab" onclick="switchTab(this,'prediction')">Prédiction</div>
+      <div class="tab" onclick="switchTab(this,'vfx')">VFX Shots</div>
+    </div>
+
+    <div id="tab-script" class="tab-content active">
+      <div class="script-panel"><span class="scene-heading">INT. TOUR D'IVOIRE — NUIT</span>
+
+<span class="action">La salle de cristal baigne dans une lumière bleue pulsante. AELION (22 ans, regard vif) s'approche d'un artefact suspendu dans le vide.</span>
+
+<span class="character">AELION</span>
+<span class="dialogue">C'est... ça que les Gardiens cachaient depuis cent ans ?</span>
+
+<span class="action">Un grondement sourd. Les cristaux s'emballent. La voix de MORVAR résonne depuis l'ombre.</span>
+
+<span class="character">MORVAR (V.O.)</span>
+<span class="dialogue">Pas caché, jeune naïf. Protégé. Et tu viens de briser la protection.</span>
+
+<span class="action">Aelion saisit l'artefact. Une lumière aveuglante explose dans la salle.</span>
+
+<span class="scene-heading">EXT. CIEL D'AELORIA — CONTINU</span>
+
+<span class="action">Les îles flottantes tremblent. Des fissures lumineuses apparaissent dans le ciel.</span></div>
+    </div>
+
+    <div id="tab-prediction" class="tab-content">
+      <div class="pred-grid">
+        <div class="pred-card">
+          <div class="pred-label">Box Office (estimation)</div>
+          <div class="pred-value" style="color: var(--accent)">280M€</div>
+          <div class="pred-range">Fourchette : 168M — 420M€</div>
+        </div>
+        <div class="pred-card">
+          <div class="pred-label">ROI estimé</div>
+          <div class="pred-value" style="color: #4ade80">+250%</div>
+          <div class="pred-range">Budget : 80M€</div>
+        </div>
+        <div class="pred-card">
+          <div class="pred-label">Potentiel streaming</div>
+          <div class="pred-value" style="color: #60a5fa">8.4/10</div>
+          <div class="pred-range">Netflix, Prime, Canal+</div>
+        </div>
+        <div class="pred-card">
+          <div class="pred-label">Niveau de risque</div>
+          <div class="pred-value" style="color: #4ade80">Faible</div>
+          <div class="pred-range">Franchise établie</div>
+        </div>
+        <div class="pred-card">
+          <div class="pred-label">Audience primaire</div>
+          <div class="pred-value" style="font-size:1.2rem; color: var(--text-primary)">18–40 ans</div>
+          <div class="pred-range">30.5M spectateurs potentiels</div>
+        </div>
+        <div class="pred-card">
+          <div class="pred-label">Fenêtre de sortie</div>
+          <div class="pred-value" style="font-size:1.2rem; color: #fb923c">Été</div>
+          <div class="pred-range">Multiplicateur ×1.35</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-vfx" class="tab-content">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;">
+        <div class="panel">
+          <div style="padding:1rem; background: rgba(124,92,252,0.05);">
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem;">SC042 · BACKGROUND</div>
+            <div style="font-size:0.88rem; font-weight:600;">Tour d'Ivoire — Nuit</div>
+            <div style="font-size:0.75rem; color: #4ade80; margin-top:0.4rem;">✓ Rendu 1920×1080</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div style="padding:1rem; background: rgba(124,92,252,0.05);">
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem;">SC043 · VFX PARTICLE</div>
+            <div style="font-size:0.88rem; font-weight:600;">Activation de l'artefact</div>
+            <div style="font-size:0.75rem; color: #fb923c; margin-top:0.4rem;">⟳ En cours — 68%</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div style="padding:1rem; background: rgba(124,92,252,0.05);">
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem;">SC044 · COLOR GRADE</div>
+            <div style="font-size:0.88rem; font-weight:600;">Ciel fissuré — Aeloria</div>
+            <div style="font-size:0.75rem; color: var(--text-muted); margin-top:0.4rem;">○ En attente</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../static/main.js"></script>
+  <script>
+    function switchTab(el, tabId) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
