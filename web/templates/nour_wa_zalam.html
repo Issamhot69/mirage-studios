@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نور وظلام — Mirage Studios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05030f;
+      --light-world: #FFD700;
+      --dark-world: #8B008B;
+      --light-glow: rgba(255,215,0,0.15);
+      --dark-glow: rgba(139,0,139,0.15);
+      --border: rgba(255,255,255,0.07);
+      --text: #f5f0ff;
+      --text2: #9090bb;
+      --font-ar: 'Scheherazade New', serif;
+      --font: 'Syne', sans-serif;
+      --body: 'DM Sans', sans-serif;
+      --r: 14px; --r2: 20px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: var(--body); background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    /* BG */
+    body::before {
+      content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+      background:
+        radial-gradient(ellipse 60% 50% at 0% 50%, rgba(255,215,0,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 100% 50%, rgba(139,0,139,0.06) 0%, transparent 60%);
+    }
+
+    /* NAVBAR */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 3rem;
+      background:rgba(5,3,15,0.9); backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-logo { font-family:var(--font); font-size:1rem; font-weight:800; letter-spacing:0.1em;
+      background:linear-gradient(135deg,#FFD700,#8B008B);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .nav-links { display:flex; gap:1.5rem; list-style:none; }
+    .nav-links a { color:var(--text2); text-decoration:none; font-size:0.85rem; font-family:var(--font); font-weight:600; transition:color 0.2s; }
+    .nav-links a:hover { color:var(--text); }
+    .lang-toggle { display:flex; gap:0.4rem; }
+    .ltbtn { background:none; border:1px solid var(--border); color:var(--text2);
+      font-size:0.72rem; font-family:var(--font); font-weight:700;
+      padding:0.25rem 0.55rem; border-radius:6px; cursor:pointer; transition:all 0.2s; }
+    .ltbtn.active { border-color:#FFD700; color:#FFD700; background:rgba(255,215,0,0.1); }
+
+    /* HERO */
+    .hero {
+      min-height:100vh; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:8rem 3rem 4rem; text-align:center;
+      position:relative; z-index:1;
+    }
+    .two-worlds {
+      display:flex; gap:1rem; align-items:center; justify-content:center;
+      margin-bottom:2rem;
+    }
+    .world-badge {
+      font-size:0.75rem; font-family:var(--font); font-weight:700;
+      padding:0.35rem 1rem; border-radius:30px; letter-spacing:0.1em;
+    }
+    .badge-light { background:rgba(255,215,0,0.1); border:1px solid rgba(255,215,0,0.3); color:#FFD700; }
+    .badge-dark { background:rgba(139,0,139,0.1); border:1px solid rgba(139,0,139,0.3); color:#da70d6; }
+    .vs { color:var(--text2); font-family:var(--font); font-weight:800; font-size:1rem; }
+
+    .hero-title-ar {
+      font-family:var(--font-ar); font-size:clamp(3rem,8vw,7rem);
+      font-weight:700; line-height:1.1; margin-bottom:0.5rem;
+      background:linear-gradient(135deg,#FFD700 0%,#ffffff 40%,#da70d6 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .hero-title-fr {
+      font-family:var(--font); font-size:clamp(1.2rem,3vw,2rem);
+      font-weight:700; color:var(--text2); margin-bottom:2rem; letter-spacing:0.05em;
+    }
+    .hero-meta {
+      display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap;
+      margin-bottom:3rem;
+    }
+    .meta-pill {
+      font-size:0.78rem; font-family:var(--font); font-weight:600;
+      padding:0.4rem 1rem; border-radius:20px;
+      background:rgba(255,255,255,0.05); border:1px solid var(--border);
+      color:var(--text2);
+    }
+    .hero-cta { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+    .btn-gold {
+      padding:0.85rem 2rem; border-radius:var(--r);
+      background:linear-gradient(135deg,#FFD700,#FFA500);
+      border:none; color:#1a0a00; font-family:var(--font);
+      font-size:0.9rem; font-weight:800; cursor:pointer;
+      transition:opacity 0.2s,transform 0.2s; letter-spacing:0.05em;
+      box-shadow:0 0 30px rgba(255,215,0,0.3);
+    }
+    .btn-gold:hover { opacity:0.9; transform:translateY(-2px); }
+    .btn-purple {
+      padding:0.85rem 2rem; border-radius:var(--r);
+      background:linear-gradient(135deg,#8B008B,#4B0082);
+      border:none; color:white; font-family:var(--font);
+      font-size:0.9rem; font-weight:800; cursor:pointer;
+      transition:opacity 0.2s,transform 0.2s; letter-spacing:0.05em;
+      box-shadow:0 0 30px rgba(139,0,139,0.3);
+    }
+    .btn-purple:hover { opacity:0.9; transform:translateY(-2px); }
+
+    /* WORLDS SECTION */
+    .worlds-section {
+      padding:5rem 3rem; max-width:1100px; margin:0 auto;
+      position:relative; z-index:1;
+    }
+    .section-title {
+      font-family:var(--font); font-size:1.5rem; font-weight:800;
+      text-align:center; margin-bottom:2.5rem;
+    }
+    .worlds-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .world-card {
+      border-radius:var(--r2); padding:2rem; border:1px solid var(--border);
+      position:relative; overflow:hidden;
+    }
+    .world-card-light { background:rgba(255,215,0,0.04); border-color:rgba(255,215,0,0.2); }
+    .world-card-dark { background:rgba(139,0,139,0.04); border-color:rgba(139,0,139,0.2); }
+    .world-name-ar { font-family:var(--font-ar); font-size:2rem; font-weight:700; margin-bottom:0.25rem; }
+    .world-name-fr { font-family:var(--font); font-size:0.85rem; font-weight:600; color:var(--text2); margin-bottom:1rem; letter-spacing:0.1em; }
+    .world-card-light .world-name-ar { color:#FFD700; }
+    .world-card-dark .world-name-ar { color:#da70d6; }
+    .world-desc { font-size:0.88rem; color:var(--text2); line-height:1.7; margin-bottom:1.5rem; }
+    .world-stats { display:flex; flex-direction:column; gap:0.5rem; }
+    .world-stat { display:flex; gap:0.75rem; font-size:0.8rem; }
+    .stat-key { color:var(--text2); width:80px; flex-shrink:0; }
+    .stat-val { color:var(--text); }
+
+    /* HEROES */
+    .heroes-section { padding:4rem 3rem; max-width:1100px; margin:0 auto; position:relative; z-index:1; }
+    .heroes-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .hero-card {
+      border-radius:var(--r2); padding:2rem; border:1px solid var(--border);
+      position:relative;
+    }
+    .hero-card-light { background:rgba(255,215,0,0.03); border-color:rgba(255,215,0,0.15); }
+    .hero-card-dark { background:rgba(139,0,139,0.03); border-color:rgba(139,0,139,0.15); }
+    .hero-name-ar { font-family:var(--font-ar); font-size:2.5rem; font-weight:700; }
+    .hero-card-light .hero-name-ar { color:#FFD700; }
+    .hero-card-dark .hero-name-ar { color:#da70d6; }
+    .hero-name-fr { font-family:var(--font); font-size:0.8rem; color:var(--text2); letter-spacing:0.15em; margin-bottom:0.5rem; }
+    .hero-role { font-size:0.88rem; color:var(--text); margin-bottom:1rem; line-height:1.5; }
+    .hero-power {
+      display:inline-block; font-size:0.75rem; font-family:var(--font); font-weight:700;
+      padding:0.3rem 0.8rem; border-radius:20px; margin-bottom:1rem;
+    }
+    .power-light { background:rgba(255,215,0,0.1); color:#FFD700; border:1px solid rgba(255,215,0,0.2); }
+    .power-dark { background:rgba(139,0,139,0.1); color:#da70d6; border:1px solid rgba(139,0,139,0.2); }
+    .hero-arc { font-size:0.82rem; color:var(--text2); font-style:italic; line-height:1.6; }
+
+    /* STRUCTURE */
+    .structure-section { padding:4rem 3rem; max-width:1100px; margin:0 auto; position:relative; z-index:1; }
+    .acts-grid { display:flex; flex-direction:column; gap:1rem; }
+    .act-card {
+      background:rgba(255,255,255,0.02); border:1px solid var(--border);
+      border-radius:var(--r); padding:1.5rem; cursor:pointer;
+      transition:background 0.2s;
+    }
+    .act-card:hover { background:rgba(255,255,255,0.04); }
+    .act-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; }
+    .act-title-ar { font-family:var(--font-ar); font-size:1.3rem; color:#FFD700; }
+    .act-title-fr { font-family:var(--font); font-size:0.75rem; color:var(--text2); letter-spacing:0.1em; }
+    .act-duration { font-family:var(--font); font-size:0.85rem; color:var(--text2); }
+    .act-moments { list-style:none; display:flex; flex-direction:column; gap:0.4rem; }
+    .act-moments li { font-size:0.83rem; color:var(--text2); padding-right:1rem; position:relative; }
+    .act-moments li::before { content:'◈'; color:#FFD700; position:absolute; right:0; font-size:0.6rem; top:2px; }
+
+    /* STATS */
+    .stats-section {
+      padding:4rem 3rem; max-width:1100px; margin:0 auto;
+      position:relative; z-index:1;
+    }
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+    .stat-card {
+      background:rgba(255,255,255,0.02); border:1px solid var(--border);
+      border-radius:var(--r); padding:1.5rem; text-align:center;
+    }
+    .stat-big {
+      font-family:var(--font); font-size:2.2rem; font-weight:800;
+      background:linear-gradient(135deg,#FFD700,#da70d6);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .stat-lbl { font-size:0.75rem; color:var(--text2); margin-top:0.3rem; }
+
+    /* FOOTER */
+    footer {
+      border-top:1px solid var(--border); padding:3rem;
+      text-align:center; position:relative; z-index:1;
+    }
+    footer p { color:var(--text2); font-size:0.82rem; }
+
+    @media(max-width:768px) {
+      nav { padding:1rem 1.5rem; }
+      .nav-links { display:none; }
+      .worlds-grid, .heroes-grid, .stats-grid { grid-template-columns:1fr; }
+      .worlds-section, .heroes-section, .structure-section, .stats-section { padding:3rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">◈ MIRAGE STUDIOS</div>
+  <ul class="nav-links">
+    <li><a href="../index.html">Accueil</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="video_studio.html">Video Studio</a></li>
+  </ul>
+  <div class="lang-toggle">
+    <button class="ltbtn active" onclick="setDir('rtl',this)">AR</button>
+    <button class="ltbtn" onclick="setDir('ltr',this)">FR</button>
+    <button class="ltbtn" onclick="setDir('ltr',this)">EN</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="two-worlds">
+    <span class="world-badge badge-light">✨ عالم النور</span>
+    <span class="vs">⚔</span>
+    <span class="world-badge badge-dark">🌑 عالم الظلام</span>
+  </div>
+  <div class="hero-title-ar">نور وظلام</div>
+  <div class="hero-title-fr">LUMIÈRE ET TÉNÈBRES</div>
+  <div class="hero-meta">
+    <span class="meta-pill">🎬 Long Métrage — 180 min</span>
+    <span class="meta-pill">🌍 Arabe + 8 langues</span>
+    <span class="meta-pill">👥 Tout public</span>
+    <span class="meta-pill">✨ Fantastique Épique</span>
+    <span class="meta-pill">💰 Budget 120M€</span>
+  </div>
+  <div class="hero-cta">
+    <button class="btn-gold" onclick="document.querySelector('.structure-section').scrollIntoView({behavior:'smooth'})">
+      📜 Voir le scénario
+    </button>
+    <button class="btn-purple" onclick="document.querySelector('.stats-section').scrollIntoView({behavior:'smooth'})">
+      📊 Prédiction box-office
+    </button>
+  </div>
+</section>
+
+<!-- WORLDS -->
+<section class="worlds-section">
+  <div class="section-title">العالمان — Les Deux Mondes</div>
+  <div class="worlds-grid">
+    <div class="world-card world-card-light">
+      <div class="world-name-ar">عالم النور</div>
+      <div class="world-name-fr">MONDE DE LUMIÈRE</div>
+      <div class="world-desc">Un royaume céleste baigné de lumière dorée, flottant au-dessus des nuages. Les Nouriens vivent en harmonie avec la magie lumineuse depuis des millénaires.</div>
+      <div class="world-stats">
+        <div class="world-stat"><span class="stat-key">Magie</span><span class="stat-val">Lumière, guérison, prophétie</span></div>
+        <div class="world-stat"><span class="stat-key">Capitale</span><span class="stat-val">مدينة الفجر — Cité de l'Aube</span></div>
+        <div class="world-stat"><span class="stat-key">Style VFX</span><span class="stat-val">Cristal blanc, tours dorées</span></div>
+        <div class="world-stat"><span class="stat-key">Musique</span><span class="stat-val">Orchestral, harpes, chœurs</span></div>
+      </div>
+    </div>
+    <div class="world-card world-card-dark">
+      <div class="world-name-ar">عالم الظلام</div>
+      <div class="world-name-fr">MONDE DES TÉNÈBRES</div>
+      <div class="world-desc">Un royaume souterrain mystérieux, éclairé par des cristaux noirs et des flammes violettes. Pas maléfique — incompris par le reste du monde.</div>
+      <div class="world-stats">
+        <div class="world-stat"><span class="stat-key">Magie</span><span class="stat-val">Ombres, illusion, transformation</span></div>
+        <div class="world-stat"><span class="stat-key">Capitale</span><span class="stat-val">قلعة الغسق — Forteresse du Crépuscule</span></div>
+        <div class="world-stat"><span class="stat-key">Style VFX</span><span class="stat-val">Obsidienne, flammes violettes</span></div>
+        <div class="world-stat"><span class="stat-key">Musique</span><span class="stat-val">Cordes graves, percussions</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HEROES -->
+<section class="heroes-section">
+  <div class="section-title">البطلان — Les Deux Héros</div>
+  <div class="heroes-grid">
+    <div class="hero-card hero-card-light">
+      <div class="hero-name-ar">ضياء</div>
+      <div class="hero-name-fr">DIYAA · 19 ans · Monde de Lumière</div>
+      <div class="hero-role">Prince héritier qui doute de la guerre imposée par son père. Maîtrise la lumière mais ignore tout du monde des ténèbres.</div>
+      <span class="hero-power power-light">⚡ Contrôle de la Lumière</span>
+      <div class="hero-arc">« Découvre que l'ennemi qu'on lui a appris à haïr partage sa même douleur. »</div>
+    </div>
+    <div class="hero-card hero-card-dark">
+      <div class="hero-name-ar">ظلال</div>
+      <div class="hero-name-fr">ZHALAL · 18 ans · Monde des Ténèbres</div>
+      <div class="hero-role">Fille rebelle du roi des ombres. Méfie-vous de tout ce qui vient du monde de la lumière — jusqu'à ce qu'elle le visite.</div>
+      <span class="hero-power power-dark">🌑 Maîtrise des Ombres</span>
+      <div class="hero-arc">« Apprend que la paix n'est pas une faiblesse — c'est le vrai courage. »</div>
+    </div>
+  </div>
+</section>
+
+<!-- STRUCTURE -->
+<section class="structure-section">
+  <div class="section-title">بنية الفيلم — Structure du Film</div>
+  <div class="acts-grid">
+    <div class="act-card">
+      <div class="act-header">
+        <div>
+          <div class="act-title-ar">الفصل الأول: الحرب تبدأ</div>
+          <div class="act-title-fr">ACTE I — LA GUERRE COMMENCE</div>
+        </div>
+        <div class="act-duration">45 min · 30 scènes</div>
+      </div>
+      <ul class="act-moments">
+        <li>Ouverture épique — bataille ancestrale (flashback CGI)</li>
+        <li>Introduction de Diyaa dans le Monde de Lumière</li>
+        <li>Introduction de Zhalal dans le Monde des Ténèbres</li>
+        <li>Incident déclencheur — l'artefact de paix est volé</li>
+        <li>Les deux héros reçoivent la même mission séparément</li>
+      </ul>
+    </div>
+    <div class="act-card">
+      <div class="act-header">
+        <div>
+          <div class="act-title-ar">الفصل الثاني: اللقاء المستحيل</div>
+          <div class="act-title-fr">ACTE II — LA RENCONTRE IMPOSSIBLE</div>
+        </div>
+        <div class="act-duration">90 min · 60 scènes</div>
+      </div>
+      <ul class="act-moments">
+        <li>Diyaa et Zhalal se rencontrent — combat immédiat</li>
+        <li>Forcés de coopérer — trêve fragile</li>
+        <li>Chacun découvre le monde de l'autre avec émerveillement</li>
+        <li>Révélation : le vrai traître est dans le Monde de Lumière</li>
+        <li>Trahison — les deux armées les encerclent</li>
+      </ul>
+    </div>
+    <div class="act-card">
+      <div class="act-header">
+        <div>
+          <div class="act-title-ar">الفصل الثالث: من أجل السلام</div>
+          <div class="act-title-fr">ACTE III — POUR LA PAIX</div>
+        </div>
+        <div class="act-duration">45 min · 30 scènes</div>
+      </div>
+      <ul class="act-moments">
+        <li>Bataille finale épique entre les deux armées</li>
+        <li>Diyaa et Zhalal s'interposent — fusionnent leur magie</li>
+        <li>Révélation : les deux mondes viennent de la même source</li>
+        <li>Sacrifice et réconciliation des deux peuples</li>
+        <li>Épilogue — l'aube d'un nouveau monde unifié</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="section-title">الأرقام — Chiffres du Projet</div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-big">120M€</div><div class="stat-lbl">Budget production</div></div>
+    <div class="stat-card"><div class="stat-big">480M€</div><div class="stat-lbl">Box-office estimé</div></div>
+    <div class="stat-card"><div class="stat-big">+300%</div><div class="stat-lbl">ROI prédit</div></div>
+    <div class="stat-card"><div class="stat-big">9</div><div class="stat-lbl">Langues de doublage</div></div>
+    <div class="stat-card"><div class="stat-big">120</div><div class="stat-lbl">Scènes totales</div></div>
+    <div class="stat-card"><div class="stat-big">500+</div><div class="stat-lbl">Shots VFX</div></div>
+    <div class="stat-card"><div class="stat-big">6</div><div class="stat-lbl">Personnages principaux</div></div>
+    <div class="stat-card"><div class="stat-big">180</div><div class="stat-lbl">Minutes</div></div>
+  </div>
+</section>
+
+<footer>
+  <p>◈ MIRAGE STUDIOS — نور وظلام — Produit avec Intelligence Artificielle</p>
+  <p style="margin-top:0.5rem; font-size:0.75rem;">Python AI Engine · Claude API · Stable Diffusion · ElevenLabs</p>
+</footer>
+
+<script>
+  function setDir(dir, btn) {
+    document.documentElement.setAttribute('dir', dir);
+    document.querySelectorAll('.ltbtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // Animate stats on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.stat-card, .world-card, .hero-card, .act-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
