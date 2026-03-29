@@ -1,1 +1,1 @@
-web: cd api && gunicorn app:create_app() --bind 0.0.0.0:
+web: gunicorn --chdir api app:create_app() --bind 0.0.0.0:$PORT
