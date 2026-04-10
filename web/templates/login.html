@@ -496,7 +496,7 @@
           localStorage.setItem('mirage_token', data.token);
           localStorage.setItem('mirage_user', JSON.stringify(data.user));
           showMsg('login-msg', `Bienvenue ${data.user.name} ! Redirection...`, 'success');
-          setTimeout(() => window.location.href = 'dashboard.html', 1500);
+          setTimeout(() => window.location.href = 'studio.html', 1500);
         } else {
           showMsg('login-msg', data.error || 'Erreur de connexion', 'error');
         }
@@ -539,7 +539,7 @@
           localStorage.setItem('mirage_token', data.token);
           localStorage.setItem('mirage_user', JSON.stringify(data.user));
           showMsg('register-msg', 'Compte créé ! Redirection...', 'success');
-          setTimeout(() => window.location.href = 'dashboard.html', 1500);
+          setTimeout(() => window.location.href = 'studio.html', 1500);
         } else {
           showMsg('register-msg', data.error || 'Erreur inscription', 'error');
         }
@@ -566,7 +566,7 @@
         if (data.success) {
           localStorage.setItem('mirage_token', data.token);
           localStorage.setItem('mirage_user', JSON.stringify(data.user));
-          window.location.href = 'dashboard.html';
+          window.location.href = 'studio.html';
         }
       });
     }

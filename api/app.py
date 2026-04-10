@@ -45,15 +45,15 @@ def create_app(config_path: str = "config.json") -> Flask:
     else:
         print(f"[Claude] Mode demo")
 
-    # Replicate
-    replicate_token = app.config.get("REPLICATE_API_TOKEN") or os.environ.get("REPLICATE_API_TOKEN", "")
-    if replicate_token:
-        os.environ["REPLICATE_API_TOKEN"] = replicate_token
-        print(f"[Replicate] OK Token configure")
+    # Kling API
+    kling_key = app.config.get("KLING_API_KEY") or os.environ.get("KLING_API_KEY", "")
+    if kling_key:
+        os.environ["KLING_API_KEY"] = kling_key
+        print(f"[Kling] OK Cle API configuree")
     else:
-        print(f"[Replicate] Token manquant")
+        print(f"[Kling] Token manquant")
 
-    # D-ID
+    # D-ID API
     did_key = app.config.get("DID_API_KEY") or os.environ.get("DID_API_KEY", "")
     if did_key:
         os.environ["DID_API_KEY"] = did_key
@@ -71,11 +71,7 @@ def create_app(config_path: str = "config.json") -> Flask:
     else:
         print(f"[Stripe] Mode demo")
 
-    CORS(app, origins=app.config.get("ALLOWED_ORIGINS", [
-        "http://localhost:3001",
-        "http://localhost:5001",
-        "http://localhost:5500"
-    ]))
+    CORS(app, origins="*")
 
     init_auth(app)
     register_routes(app)
@@ -87,7 +83,7 @@ def create_app(config_path: str = "config.json") -> Flask:
     print(f"[Auth Users] Routes login - /api/users/*")
 
     app.register_blueprint(replicate_bp)
-    print(f"[Replicate] Routes video - /api/video/*")
+    print(f"[Kling] Routes video - /api/video/*")
 
     app.register_blueprint(music_bp)
     print(f"[Music] Routes musique - /api/music/*")
@@ -101,6 +97,34 @@ def create_app(config_path: str = "config.json") -> Flask:
     app.register_blueprint(payment_bp)
     print(f"[Stripe] Routes paiement - /api/payment/*")
 
+    # Pages HTML publiques
+    TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'web', 'templates')
+
+    @app.route('/')
+    def index():
+        return send_from_directory(TEMPLATES_DIR, 'studio.html')
+
+    @app.route('/login')
+    def login_page():
+        return send_from_directory(TEMPLATES_DIR, 'login.html')
+
+    @app.route('/sales')
+    def sales_page():
+        return send_from_directory(TEMPLATES_DIR, 'sales.html')
+
+    @app.route('/dashboard')
+    def dashboard_page():
+        return send_from_directory(TEMPLATES_DIR, 'dashboard.html')
+
+    @app.route('/studio')
+    def studio_page():
+        return send_from_directory(TEMPLATES_DIR, 'studio.html')
+
+    @app.route('/payment')
+    def payment_page():
+        return send_from_directory(TEMPLATES_DIR, 'payment.html')
+
+    # Upload photo
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
     def allowed_file(filename):
@@ -119,13 +143,11 @@ def create_app(config_path: str = "config.json") -> Flask:
         filename = f"{uuid.uuid4()}.{ext}"
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
-        photo_url = f"http://localhost:5001/api/upload/serve/{filename}"
-        print(f"[Upload] Photo sauvegardee : {filename}")
+        photo_url = f"/api/upload/serve/{filename}"
         return jsonify({
             "success": True,
             "filename": filename,
             "photo_url": photo_url,
-            "message": "Photo uploadee avec succes !"
         })
 
     @app.route('/api/upload/serve/<filename>', methods=['GET'])
@@ -139,7 +161,7 @@ def create_app(config_path: str = "config.json") -> Flask:
             "version": app.config["VERSION"],
             "service": "mirage-studios-api",
             "claude_api": "ready" if os.environ.get("ANTHROPIC_API_KEY") else "missing",
-            "replicate": "ready" if os.environ.get("REPLICATE_API_TOKEN") else "missing",
+            "kling": "ready" if os.environ.get("KLING_API_KEY") else "missing",
             "did_avatar": "ready" if os.environ.get("DID_API_KEY") else "missing",
             "stripe": "ready" if os.environ.get("STRIPE_SECRET_KEY") else "missing",
             "casting": "ready",

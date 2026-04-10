@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Studio Vidéo IA — Mirage Studios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080810;
+      --bg2: #0d0d1a;
+      --card: #111120;
+      --border: rgba(255,255,255,0.07);
+      --gold: #f0b429;
+      --gold2: #ffd166;
+      --text: #f0eeff;
+      --text2: #8888aa;
+      --text3: #444466;
+      --green: #06d6a0;
+      --red: #ef476f;
+      --font: 'Syne', sans-serif;
+      --body: 'DM Sans', sans-serif;
+      --r: 14px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:var(--body); background:var(--bg); color:var(--text); min-height:100vh; }
+
+    /* NAV */
+    nav {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 2rem; background:var(--bg2);
+      border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100;
+    }
+    .nav-logo { font-family:var(--font); font-weight:800; font-size:1.1rem; color:var(--gold); }
+    .nav-credits {
+      display:flex; align-items:center; gap:0.5rem;
+      background:rgba(240,180,41,0.1); border:1px solid rgba(240,180,41,0.2);
+      padding:0.4rem 1rem; border-radius:30px; font-size:0.85rem;
+    }
+    .credits-num { font-family:var(--font); font-weight:700; color:var(--gold); }
+    .nav-user { display:flex; align-items:center; gap:1rem; }
+    .btn-upgrade {
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#1a0a00; padding:0.4rem 1rem; border-radius:8px;
+      font-size:0.8rem; font-weight:700; border:none; cursor:pointer;
+      font-family:var(--body);
+    }
+    .btn-logout {
+      background:none; border:1px solid var(--border); color:var(--text2);
+      padding:0.4rem 1rem; border-radius:8px; font-size:0.8rem; cursor:pointer;
+      font-family:var(--body); transition:all 0.2s;
+    }
+    .btn-logout:hover { border-color:var(--red); color:var(--red); }
+
+    /* LAYOUT */
+    .layout { display:grid; grid-template-columns:380px 1fr; min-height:calc(100vh - 60px); }
+
+    /* LEFT PANEL */
+    .left-panel { padding:2rem; border-right:1px solid var(--border); overflow-y:auto; }
+    .panel-title { font-family:var(--font); font-size:0.7rem; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:1.5rem; }
+
+    .field { margin-bottom:1.2rem; }
+    .field-label { font-size:0.78rem; font-weight:500; color:var(--text2); margin-bottom:0.4rem; display:block; }
+    .field-textarea {
+      width:100%; background:var(--card); border:1px solid var(--border);
+      border-radius:var(--r); color:var(--text); font-family:var(--body);
+      font-size:0.9rem; padding:0.85rem 1rem; outline:none; resize:vertical;
+      min-height:120px; transition:border-color 0.2s;
+    }
+    .field-textarea:focus { border-color:rgba(240,180,41,0.4); }
+    .field-textarea::placeholder { color:var(--text3); }
+
+    .field-select {
+      width:100%; background:var(--card); border:1px solid var(--border);
+      border-radius:var(--r); color:var(--text); font-family:var(--body);
+      font-size:0.9rem; padding:0.75rem 1rem; outline:none; cursor:pointer;
+      appearance:none;
+    }
+
+    /* Style pills */
+    .style-pills { display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .style-pill {
+      padding:0.35rem 0.9rem; border-radius:30px; font-size:0.78rem; font-weight:500;
+      background:var(--card); border:1px solid var(--border); color:var(--text2);
+      cursor:pointer; transition:all 0.2s;
+    }
+    .style-pill.active { background:rgba(240,180,41,0.15); border-color:var(--gold); color:var(--gold); }
+
+    /* Cost display */
+    .cost-bar {
+      background:var(--card); border:1px solid var(--border); border-radius:var(--r);
+      padding:1rem; margin-bottom:1.5rem;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .cost-label { font-size:0.82rem; color:var(--text2); }
+    .cost-value { font-family:var(--font); font-size:1.1rem; font-weight:700; color:var(--gold); }
+
+    /* Generate button */
+    .btn-generate {
+      width:100%; padding:1rem; border-radius:var(--r);
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      border:none; color:#1a0a00; font-family:var(--font);
+      font-size:1rem; font-weight:800; cursor:pointer;
+      transition:opacity 0.2s, transform 0.2s;
+      box-shadow:0 0 30px rgba(240,180,41,0.2);
+      letter-spacing:0.02em;
+    }
+    .btn-generate:hover { opacity:0.9; transform:translateY(-1px); }
+    .btn-generate:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+
+    /* RIGHT PANEL */
+    .right-panel { padding:2rem; overflow-y:auto; }
+
+    /* Status */
+    .status-bar {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--r); padding:1rem 1.5rem;
+      display:flex; align-items:center; gap:1rem; margin-bottom:2rem;
+    }
+    .status-dot { width:10px; height:10px; border-radius:50%; background:var(--text3); flex-shrink:0; }
+    .status-dot.generating { background:var(--gold); animation:pulse 1s infinite; }
+    .status-dot.done { background:var(--green); }
+    .status-dot.error { background:var(--red); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .status-text { font-size:0.88rem; color:var(--text2); flex:1; }
+
+    /* Video result */
+    .video-result {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:20px; overflow:hidden; margin-bottom:1.5rem;
+      display:none;
+    }
+    .video-result.visible { display:block; }
+    .video-result video { width:100%; display:block; }
+    .video-actions {
+      padding:1rem 1.5rem; display:flex; gap:1rem; align-items:center;
+    }
+    .btn-download {
+      background:rgba(6,214,160,0.1); border:1px solid rgba(6,214,160,0.3);
+      color:var(--green); padding:0.6rem 1.5rem; border-radius:10px;
+      font-size:0.85rem; font-weight:600; cursor:pointer; text-decoration:none;
+      display:inline-block; transition:background 0.2s;
+    }
+    .btn-download:hover { background:rgba(6,214,160,0.2); }
+    .btn-share {
+      background:none; border:1px solid var(--border); color:var(--text2);
+      padding:0.6rem 1.5rem; border-radius:10px; font-size:0.85rem;
+      font-weight:600; cursor:pointer; transition:all 0.2s;
+    }
+    .btn-share:hover { border-color:var(--gold); color:var(--gold); }
+    .video-meta { font-size:0.78rem; color:var(--text3); margin-left:auto; }
+
+    /* History */
+    .history-title { font-family:var(--font); font-size:0.7rem; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:1rem; }
+    .history-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:1rem; }
+    .history-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--r); overflow:hidden; cursor:pointer;
+      transition:border-color 0.2s;
+    }
+    .history-card:hover { border-color:rgba(240,180,41,0.3); }
+    .history-thumb {
+      width:100%; height:110px; object-fit:cover; display:block;
+      background:linear-gradient(135deg, #1a1a2e, #16213e);
+    }
+    .history-info { padding:0.75rem; }
+    .history-prompt { font-size:0.78rem; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .history-date { font-size:0.7rem; color:var(--text3); margin-top:0.2rem; }
+
+    /* Empty state */
+    .empty-state {
+      text-align:center; padding:4rem 2rem; color:var(--text3);
+    }
+    .empty-icon { font-size:3rem; margin-bottom:1rem; opacity:0.5; }
+    .empty-text { font-size:0.9rem; }
+
+    /* Progress bar */
+    .progress-wrap { margin-top:0.5rem; }
+    .progress-bar { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg, var(--gold), var(--gold2)); width:0%; transition:width 0.5s; border-radius:2px; }
+
+    /* Alert */
+    .alert { padding:0.75rem 1rem; border-radius:var(--r); font-size:0.83rem; margin-bottom:1rem; display:none; }
+    .alert.error { background:rgba(239,71,111,0.1); border:1px solid rgba(239,71,111,0.2); color:var(--red); display:block; }
+    .alert.success { background:rgba(6,214,160,0.1); border:1px solid rgba(6,214,160,0.2); color:var(--green); display:block; }
+
+    /* Upgrade modal */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); display:none; align-items:center; justify-content:center; z-index:200; backdrop-filter:blur(10px); }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--card); border:1px solid rgba(240,180,41,0.2); border-radius:20px; padding:2.5rem; max-width:500px; width:90%; }
+    .modal h3 { font-family:var(--font); font-size:1.5rem; margin-bottom:0.5rem; }
+    .modal p { color:var(--text2); font-size:0.88rem; margin-bottom:2rem; }
+    .plans-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin-bottom:1.5rem; }
+    .plan-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--r); padding:1.2rem; text-align:center; cursor:pointer; transition:all 0.2s; }
+    .plan-card:hover, .plan-card.selected { border-color:var(--gold); background:rgba(240,180,41,0.05); }
+    .plan-name { font-family:var(--font); font-weight:700; font-size:0.9rem; margin-bottom:0.3rem; }
+    .plan-price { font-family:var(--font); font-size:1.5rem; font-weight:800; color:var(--gold); }
+    .plan-credits { font-size:0.75rem; color:var(--text2); margin-top:0.3rem; }
+    .btn-pay { width:100%; padding:0.9rem; background:linear-gradient(135deg, var(--gold), var(--gold2)); border:none; border-radius:var(--r); color:#1a0a00; font-family:var(--font); font-size:1rem; font-weight:700; cursor:pointer; }
+    .modal-close { float:right; background:none; border:none; color:var(--text2); font-size:1.3rem; cursor:pointer; }
+
+    @media(max-width:768px) {
+      .layout { grid-template-columns:1fr; }
+      .left-panel { border-right:none; border-bottom:1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">◈ MIRAGE STUDIOS</div>
+  <div class="nav-credits">
+    🎬 <span class="credits-num" id="credits-display">--</span> crédits
+  </div>
+  <div class="nav-user">
+    <span id="user-name" style="font-size:0.85rem;color:var(--text2)"></span>
+    <button class="btn-upgrade" onclick="openUpgrade()">⚡ Recharger</button>
+    <button class="btn-logout" onclick="logout()">Déconnexion</button>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- LEFT PANEL — Controls -->
+  <div class="left-panel">
+    <div class="panel-title">🎬 Générer une vidéo</div>
+
+    <div id="alert-box" class="alert"></div>
+
+    <div class="field">
+      <label class="field-label">Description de la vidéo *</label>
+      <textarea class="field-textarea" id="prompt" placeholder="Ex: Un château marocain au coucher du soleil, lumière dorée, cinématique 4K, caméra lente..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Style visuel</label>
+      <div class="style-pills" id="style-pills">
+        <div class="style-pill active" onclick="selectStyle(this, '')">Libre</div>
+        <div class="style-pill" onclick="selectStyle(this, 'cinematic, film quality, ')">Cinématique</div>
+        <div class="style-pill" onclick="selectStyle(this, 'anime style, ')">Anime</div>
+        <div class="style-pill" onclick="selectStyle(this, 'photorealistic, hyperrealistic, ')">Photoréaliste</div>
+        <div class="style-pill" onclick="selectStyle(this, 'watercolor painting, artistic, ')">Aquarelle</div>
+        <div class="style-pill" onclick="selectStyle(this, '3D render, CGI, ')">3D CGI</div>
+        <div class="style-pill" onclick="selectStyle(this, 'arabic oriental style, ')">Oriental</div>
+        <div class="style-pill" onclick="selectStyle(this, 'dramatic lighting, noir, ')">Noir</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Durée</label>
+      <select class="field-select" id="duration">
+        <option value="5">5 secondes — 10 crédits</option>
+        <option value="10">10 secondes — 20 crédits</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Format</label>
+      <select class="field-select" id="aspect">
+        <option value="16:9">16:9 — Paysage (YouTube, cinéma)</option>
+        <option value="9:16">9:16 — Portrait (TikTok, Reels)</option>
+        <option value="1:1">1:1 — Carré (Instagram)</option>
+      </select>
+    </div>
+
+    <div class="cost-bar">
+      <div>
+        <div class="cost-label">Coût de génération</div>
+        <div style="font-size:0.75rem;color:var(--text3);margin-top:0.2rem">Crédits restants après génération</div>
+      </div>
+      <div class="cost-value" id="cost-display">10 crédits</div>
+    </div>
+
+    <button class="btn-generate" id="btn-generate" onclick="generateVideo()">
+      ✨ Générer la vidéo
+    </button>
+
+    <!-- Prompts suggérés -->
+    <div style="margin-top:1.5rem">
+      <div class="panel-title" style="margin-bottom:0.75rem">💡 Idées de prompts</div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem">
+        <div class="style-pill" style="border-radius:8px;padding:0.5rem 0.75rem;cursor:pointer;font-size:0.78rem" onclick="setPrompt(this)">Médina marocaine animée, marchands, lumière dorée</div>
+        <div class="style-pill" style="border-radius:8px;padding:0.5rem 0.75rem;cursor:pointer;font-size:0.78rem" onclick="setPrompt(this)">Désert du Sahara, coucher de soleil épique, dunes de sable</div>
+        <div class="style-pill" style="border-radius:8px;padding:0.5rem 0.75rem;cursor:pointer;font-size:0.78rem" onclick="setPrompt(this)">Publicité luxe parfum, modèle élégante, Paris nocturne</div>
+        <div class="style-pill" style="border-radius:8px;padding:0.5rem 0.75rem;cursor:pointer;font-size:0.78rem" onclick="setPrompt(this)">Scène de film d'action, voiture rapide, explosion cinématique</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL — Results -->
+  <div class="right-panel">
+
+    <!-- Status -->
+    <div class="status-bar" id="status-bar">
+      <div class="status-dot" id="status-dot"></div>
+      <div class="status-text" id="status-text">Prêt à générer votre vidéo...</div>
+      <div class="progress-wrap" style="flex:1;display:none" id="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- Video Result -->
+    <div class="video-result" id="video-result">
+      <video id="video-player" controls playsinline></video>
+      <div class="video-actions">
+        <a class="btn-download" id="btn-download" href="#" download="mirage-video.mp4">⬇ Télécharger</a>
+        <button class="btn-share" onclick="copyVideoUrl()">🔗 Copier lien</button>
+        <span class="video-meta" id="video-meta"></span>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="history-title">Historique des vidéos</div>
+    <div class="history-grid" id="history-grid">
+      <div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">🎬</div>
+        <div class="empty-text">Vos vidéos générées apparaîtront ici</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- UPGRADE MODAL -->
+<div class="modal-overlay" id="upgrade-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeUpgrade()">✕</button>
+    <h3>⚡ Recharger vos crédits</h3>
+    <p>Choisissez un plan pour continuer à générer des vidéos</p>
+    <div class="plans-grid">
+      <div class="plan-card selected" onclick="selectPlan(this, 'starter')">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$29</div>
+        <div class="plan-credits">100 crédits<br>~10 vidéos</div>
+      </div>
+      <div class="plan-card" onclick="selectPlan(this, 'pro')">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$99</div>
+        <div class="plan-credits">500 crédits<br>~50 vidéos</div>
+      </div>
+      <div class="plan-card" onclick="selectPlan(this, 'studio')">
+        <div class="plan-name">Studio</div>
+        <div class="plan-price">$299</div>
+        <div class="plan-credits">2000 crédits<br>~200 vidéos</div>
+      </div>
+    </div>
+    <button class="btn-pay" onclick="processPlan()">Payer et recharger →</button>
+  </div>
+</div>
+
+<script>
+  const API = 'http://localhost:5001';
+  let selectedStyle = '';
+  let selectedPlan = 'starter';
+  let currentTaskId = null;
+  let pollInterval = null;
+  let videoHistory = JSON.parse(localStorage.getItem('mirage_history') || '[]');
+
+  // ── INIT ──────────────────────────────────────────
+  function init() {
+    const token = localStorage.getItem('mirage_token');
+    const user = JSON.parse(localStorage.getItem('mirage_user') || '{}');
+
+    if (!token) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    document.getElementById('user-name').textContent = user.name || '';
+    loadCredits(token);
+    renderHistory();
+    updateCost();
+
+    document.getElementById('duration').addEventListener('change', updateCost);
+  }
+
+  async function loadCredits(token) {
+    try {
+      const res = await fetch(`${API}/api/users/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.user) {
+        document.getElementById('credits-display').textContent = data.user.credits || 0;
+        localStorage.setItem('mirage_user', JSON.stringify(data.user));
+      }
+    } catch(e) {
+      document.getElementById('credits-display').textContent = '?';
+    }
+  }
+
+  // ── STYLE PILLS ───────────────────────────────────
+  function selectStyle(el, style) {
+    document.querySelectorAll('#style-pills .style-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    selectedStyle = style;
+  }
+
+  function setPrompt(el) {
+    document.getElementById('prompt').value = el.textContent;
+  }
+
+  function updateCost() {
+    const duration = parseInt(document.getElementById('duration').value);
+    const cost = duration === 5 ? 10 : 20;
+    document.getElementById('cost-display').textContent = `${cost} crédits`;
+  }
+
+  // ── GENERATE VIDEO ─────────────────────────────────
+  async function generateVideo() {
+    const prompt = document.getElementById('prompt').value.trim();
+    const duration = document.getElementById('duration').value;
+    const aspect = document.getElementById('aspect').value;
+    const token = localStorage.getItem('mirage_token');
+
+    if (!prompt) {
+      showAlert('Décrivez votre vidéo avant de générer !', 'error');
+      return;
+    }
+
+    const fullPrompt = selectedStyle + prompt;
+    const btn = document.getElementById('btn-generate');
+    btn.disabled = true;
+    btn.textContent = '⏳ Génération en cours...';
+
+    setStatus('generating', 'Envoi de la requête...');
+    startProgress();
+    hideAlert();
+
+    try {
+      const res = await fetch(`${API}/api/video/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ prompt: fullPrompt, duration_seconds: parseInt(duration), aspect_ratio: aspect })
+      });
+      const data = await res.json();
+
+      if (data.error) {
+        showAlert(data.error, 'error');
+        resetBtn();
+        return;
+      }
+
+      currentTaskId = data.prediction_id;
+      setStatus('generating', `Vidéo en cours de génération... (ID: ${currentTaskId?.slice(0,8)})`);
+
+      // Déduire les crédits
+      const cost = parseInt(duration) === 5 ? 10 : 20;
+      const user = JSON.parse(localStorage.getItem('mirage_user') || '{}');
+      user.credits = (user.credits || 0) - cost;
+      localStorage.setItem('mirage_user', JSON.stringify(user));
+      document.getElementById('credits-display').textContent = user.credits;
+
+      // Polling
+      pollVideo(currentTaskId, fullPrompt);
+
+    } catch(e) {
+      showAlert('Erreur de connexion au serveur', 'error');
+      resetBtn();
+    }
+  }
+
+  function pollVideo(taskId, prompt) {
+    let attempts = 0;
+    pollInterval = setInterval(async () => {
+      attempts++;
+      updateProgress(Math.min(attempts * 5, 90));
+      setStatus('generating', `Génération en cours... ${Math.min(attempts * 5, 90)}%`);
+
+      try {
+        const res = await fetch(`${API}/api/video/check/${taskId}`);
+        const data = await res.json();
+
+        if (data.status === 'succeeded' && data.video_url) {
+          clearInterval(pollInterval);
+          updateProgress(100);
+          setStatus('done', '✅ Vidéo générée avec succès !');
+          showVideo(data.video_url, prompt);
+          resetBtn();
+          addToHistory(data.video_url, prompt);
+        } else if (data.status === 'fail' || data.status === 'error') {
+          clearInterval(pollInterval);
+          setStatus('error', '❌ Erreur lors de la génération');
+          showAlert('La génération a échoué. Réessayez.', 'error');
+          resetBtn();
+        }
+      } catch(e) {
+        console.error('Poll error:', e);
+      }
+
+      if (attempts > 60) {
+        clearInterval(pollInterval);
+        setStatus('error', 'Timeout — La génération prend trop de temps');
+        resetBtn();
+      }
+    }, 3000);
+  }
+
+  // ── VIDEO DISPLAY ──────────────────────────────────
+  function showVideo(url, prompt) {
+    const result = document.getElementById('video-result');
+    const player = document.getElementById('video-player');
+    const dl = document.getElementById('btn-download');
+    const meta = document.getElementById('video-meta');
+
+    player.src = url;
+    dl.href = url;
+    meta.textContent = new Date().toLocaleString('fr-FR');
+    result.classList.add('visible');
+    player.play();
+  }
+
+  function copyVideoUrl() {
+    const url = document.getElementById('video-player').src;
+    navigator.clipboard.writeText(url);
+    showAlert('Lien copié !', 'success');
+    setTimeout(hideAlert, 2000);
+  }
+
+  // ── HISTORY ───────────────────────────────────────
+  function addToHistory(url, prompt) {
+    videoHistory.unshift({ url, prompt, date: new Date().toISOString() });
+    if (videoHistory.length > 20) videoHistory.pop();
+    localStorage.setItem('mirage_history', JSON.stringify(videoHistory));
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const grid = document.getElementById('history-grid');
+    if (videoHistory.length === 0) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🎬</div><div class="empty-text">Vos vidéos générées apparaîtront ici</div></div>`;
+      return;
+    }
+    grid.innerHTML = videoHistory.map(v => `
+      <div class="history-card" onclick="loadHistoryVideo('${v.url}')">
+        <video class="history-thumb" src="${v.url}" muted></video>
+        <div class="history-info">
+          <div class="history-prompt">${v.prompt}</div>
+          <div class="history-date">${new Date(v.date).toLocaleDateString('fr-FR')}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function loadHistoryVideo(url) {
+    const player = document.getElementById('video-player');
+    player.src = url;
+    document.getElementById('video-result').classList.add('visible');
+    document.getElementById('btn-download').href = url;
+    player.play();
+    window.scrollTo(0, 0);
+  }
+
+  // ── UI HELPERS ─────────────────────────────────────
+  function setStatus(type, text) {
+    const dot = document.getElementById('status-dot');
+    const txt = document.getElementById('status-text');
+    dot.className = `status-dot ${type}`;
+    txt.textContent = text;
+  }
+
+  function startProgress() {
+    document.getElementById('progress-wrap').style.display = 'block';
+    document.getElementById('progress-fill').style.width = '0%';
+  }
+
+  function updateProgress(pct) {
+    document.getElementById('progress-fill').style.width = pct + '%';
+  }
+
+  function showAlert(msg, type) {
+    const el = document.getElementById('alert-box');
+    el.textContent = msg;
+    el.className = `alert ${type}`;
+  }
+
+  function hideAlert() {
+    document.getElementById('alert-box').className = 'alert';
+  }
+
+  function resetBtn() {
+    const btn = document.getElementById('btn-generate');
+    btn.disabled = false;
+    btn.textContent = '✨ Générer la vidéo';
+  }
+
+  // ── UPGRADE MODAL ──────────────────────────────────
+  function openUpgrade() { document.getElementById('upgrade-modal').classList.add('open'); }
+  function closeUpgrade() { document.getElementById('upgrade-modal').classList.remove('open'); }
+  function selectPlan(el, plan) {
+    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedPlan = plan;
+  }
+
+  async function processPlan() {
+    window.location.href = `payment.html?plan=${selectedPlan}`;
+  }
+
+  // ── AUTH ───────────────────────────────────────────
+  function logout() {
+    localStorage.removeItem('mirage_token');
+    localStorage.removeItem('mirage_user');
+    window.location.href = 'login.html';
+  }
+
+  // Init
+  init();
+</script>
+</body>
+</html>
