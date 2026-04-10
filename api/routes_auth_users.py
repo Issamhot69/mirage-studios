@@ -67,6 +67,8 @@ def register():
             "name": user.name,
             "role": user.role,
             "plan": user.plan,
+            "avatar": user.avatar,
+            "credits": user.credits,
         }
     }), 201
 
