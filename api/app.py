@@ -14,6 +14,7 @@ from routes_music import music_bp
 from routes_casting import casting_bp
 from routes_avatar import avatar_bp
 from routes_payment import payment_bp
+from routes_apikeys import apikeys_bp
 from auth import init_auth
 import json
 import os
@@ -97,7 +98,9 @@ def create_app(config_path: str = "config.json") -> Flask:
     app.register_blueprint(payment_bp)
     print(f"[Stripe] Routes paiement - /api/payment/*")
 
-    # Pages HTML publiques
+    app.register_blueprint(apikeys_bp)
+    print(f"[API Keys] Routes - /api/keys/*")
+
     TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'web', 'templates')
 
     @app.route('/')
@@ -124,7 +127,6 @@ def create_app(config_path: str = "config.json") -> Flask:
     def payment_page():
         return send_from_directory(TEMPLATES_DIR, 'payment.html')
 
-    # Upload photo
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
     def allowed_file(filename):
@@ -138,16 +140,15 @@ def create_app(config_path: str = "config.json") -> Flask:
         if file.filename == '':
             return jsonify({"error": "Fichier vide"}), 400
         if not allowed_file(file.filename):
-            return jsonify({"error": "Format non supporte. JPG, PNG ou WEBP"}), 400
+            return jsonify({"error": "Format non supporte"}), 400
         ext = file.filename.rsplit('.', 1)[1].lower()
         filename = f"{uuid.uuid4()}.{ext}"
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
-        photo_url = f"/api/upload/serve/{filename}"
         return jsonify({
             "success": True,
             "filename": filename,
-            "photo_url": photo_url,
+            "photo_url": f"/api/upload/serve/{filename}",
         })
 
     @app.route('/api/upload/serve/<filename>', methods=['GET'])
@@ -167,6 +168,7 @@ def create_app(config_path: str = "config.json") -> Flask:
             "casting": "ready",
             "music": "ready",
             "upload": "ready",
+            "api_keys": "ready",
         }
 
     return app
