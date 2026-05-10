@@ -15,6 +15,8 @@ from routes_casting import casting_bp
 from routes_avatar import avatar_bp
 from routes_payment import payment_bp
 from routes_apikeys import apikeys_bp
+from routes_editing import editing_bp
+from routes_scenario import scenario_bp
 from auth import init_auth
 import json
 import os
@@ -100,6 +102,10 @@ def create_app(config_path: str = "config.json") -> Flask:
 
     app.register_blueprint(apikeys_bp)
     print(f"[API Keys] Routes - /api/keys/*")
+    app.register_blueprint(editing_bp)
+    print(f"[Editing] Routes - /api/editing/*")
+    app.register_blueprint(scenario_bp)
+    print(f"[Scenario] Routes - /api/scenario/*")
 
     TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'web', 'templates')
 
@@ -122,6 +128,10 @@ def create_app(config_path: str = "config.json") -> Flask:
     @app.route('/studio')
     def studio_page():
         return send_from_directory(TEMPLATES_DIR, 'studio.html')
+    
+    @app.route('/project')
+    def project_page():
+        return send_from_directory(TEMPLATES_DIR, 'project_view.html')
 
     @app.route('/payment')
     def payment_page():

@@ -1,275 +1,641 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Projet — Mirage Studios</title>
-  <link rel="stylesheet" href="../style.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mon Projet Film — Mirage Studios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    body { padding-top: 70px; }
-    .project-page { padding: 2rem 3rem; max-width: 1200px; margin: 0 auto; }
+    :root {
+      --bg: #080810; --bg2: #0d0d1a; --card: #111120;
+      --border: rgba(255,255,255,0.07); --gold: #f0b429; --gold2: #ffd166;
+      --text: #f0eeff; --text2: #8888aa; --text3: #444466;
+      --green: #06d6a0; --red: #ef476f; --purple: #8b5cf6;
+      --font: 'Syne', sans-serif; --body: 'DM Sans', sans-serif; --r: 14px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:var(--body); background:var(--bg); color:var(--text); min-height:100vh; }
 
-    .breadcrumb { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
-    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    nav {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 2rem; background:var(--bg2); border-bottom:1px solid var(--border);
+      position:sticky; top:0; z-index:100;
+    }
+    .nav-logo { font-family:var(--font); font-weight:800; font-size:1.1rem; color:var(--gold); }
+    .nav-links { display:flex; gap:1rem; }
+    .nav-link {
+      color:var(--text2); text-decoration:none; font-size:0.85rem; padding:0.4rem 1rem;
+      border-radius:8px; transition:all 0.2s;
+    }
+    .nav-link:hover, .nav-link.active { background:rgba(240,180,41,0.1); color:var(--gold); }
+    .btn-new {
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#1a0a00; padding:0.5rem 1.2rem; border-radius:8px;
+      font-size:0.85rem; font-weight:700; border:none; cursor:pointer;
+      font-family:var(--body);
+    }
 
-    .project-hero {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2rem;
-      display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;
+    .hero {
+      padding:3rem 2rem 2rem;
+      background:linear-gradient(135deg, rgba(240,180,41,0.05) 0%, rgba(139,92,246,0.05) 100%);
+      border-bottom:1px solid var(--border);
     }
-    .project-badge {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      width: 70px; height: 70px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2rem; flex-shrink: 0;
+    .hero-inner { max-width:1200px; margin:0 auto; display:flex; gap:2rem; align-items:center; }
+    .film-poster {
+      width:180px; height:260px; border-radius:16px; flex-shrink:0;
+      background:linear-gradient(135deg, #1a1a2e, #16213e);
+      display:flex; align-items:center; justify-content:center;
+      font-size:4rem; border:1px solid var(--border);
+      position:relative; overflow:hidden;
     }
-    .project-info { flex: 1; }
-    .project-info h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .project-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin: 0.75rem 0; }
-    .meta-tag {
-      font-size: 0.75rem; padding: 0.25rem 0.7rem;
-      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-      border-radius: 20px; color: var(--text-secondary);
+    .film-poster-img { width:100%; height:100%; object-fit:cover; border-radius:16px; }
+    .film-info { flex:1; }
+    .film-genre-badge {
+      display:inline-block; padding:0.3rem 0.8rem; border-radius:20px;
+      background:rgba(240,180,41,0.1); border:1px solid rgba(240,180,41,0.3);
+      color:var(--gold); font-size:0.75rem; font-weight:600; margin-bottom:0.75rem;
+      text-transform:uppercase; letter-spacing:0.1em;
     }
-    .project-desc { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; max-width: 600px; }
-    .project-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
-    .btn-sm {
-      font-size: 0.83rem; padding: 0.5rem 1.1rem; border-radius: 7px;
-      cursor: pointer; border: none; font-weight: 600; transition: opacity 0.2s;
+    .film-title { font-family:var(--font); font-size:2.5rem; font-weight:800; margin-bottom:0.5rem; }
+    .film-title-ar { font-size:1.5rem; color:var(--text2); margin-bottom:1rem; direction:rtl; }
+    .film-meta { display:flex; gap:1.5rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+    .meta-item { font-size:0.83rem; color:var(--text2); display:flex; align-items:center; gap:0.4rem; }
+    .film-synopsis { font-size:0.9rem; color:var(--text2); line-height:1.7; max-width:600px; margin-bottom:1.5rem; }
+    .hero-actions { display:flex; gap:1rem; flex-wrap:wrap; }
+    .btn-primary {
+      padding:0.75rem 1.5rem; border-radius:var(--r);
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      border:none; color:#1a0a00; font-family:var(--font);
+      font-size:0.9rem; font-weight:700; cursor:pointer; transition:opacity 0.2s;
     }
-    .btn-sm:hover { opacity: 0.85; }
-    .btn-primary-sm { background: var(--accent); color: white; }
-    .btn-outline-sm { background: transparent; border: 1px solid var(--border-accent); color: var(--text-primary); }
+    .btn-outline {
+      padding:0.75rem 1.5rem; border-radius:var(--r);
+      background:none; border:1px solid var(--border); color:var(--text2);
+      font-family:var(--body); font-size:0.9rem; cursor:pointer; transition:all 0.2s;
+    }
+    .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
 
     /* Progress */
-    .progress-section { margin-bottom: 2rem; }
-    .progress-section h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
-    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
-    .step-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.2rem;
+    .progress-section { padding:2rem; max-width:1200px; margin:0 auto; }
+    .section-title {
+      font-family:var(--font); font-size:0.7rem; font-weight:700;
+      color:var(--text3); text-transform:uppercase; letter-spacing:0.15em; margin-bottom:1rem;
     }
-    .step-card.done { border-color: rgba(74,222,128,0.3); }
-    .step-card.active { border-color: var(--border-accent); }
-    .step-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .step-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; }
-    .step-pct { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; }
-    .step-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-    .step-fill { height: 100%; border-radius: 2px; }
-    .fill-done { background: #4ade80; }
-    .fill-active { background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
-    .fill-pending { background: var(--text-muted); width: 0%; }
-
-    /* Content Tabs */
-    .tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-    .tab {
-      padding: 0.75rem 1.5rem; font-size: 0.88rem; cursor: pointer;
-      color: var(--text-muted); border-bottom: 2px solid transparent;
-      transition: color 0.2s;
+    .progress-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:2rem; }
+    .progress-card {
+      background:var(--card); border:1px solid var(--border); border-radius:var(--r);
+      padding:1.2rem;
     }
-    .tab.active { color: var(--text-primary); border-bottom-color: var(--accent); }
-    .tab:hover { color: var(--text-secondary); }
+    .progress-label { font-size:0.78rem; color:var(--text2); margin-bottom:0.5rem; }
+    .progress-bar { height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden; margin-bottom:0.4rem; }
+    .progress-fill { height:100%; border-radius:3px; background:linear-gradient(90deg, var(--gold), var(--gold2)); transition:width 0.5s; }
+    .progress-pct { font-size:0.75rem; color:var(--text3); }
 
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* Script panel */
-    .script-panel {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.5rem;
-      font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.9;
-      color: var(--text-secondary); white-space: pre-wrap;
+    /* Tabs */
+    .tabs-nav {
+      display:flex; gap:0; border-bottom:1px solid var(--border);
+      padding:0 2rem; max-width:1200px; margin:0 auto;
     }
-    .script-panel .scene-heading { color: var(--text-primary); font-weight: 700; letter-spacing: 0.1em; }
-    .script-panel .action { color: var(--text-secondary); }
-    .script-panel .character { color: var(--accent); padding-left: 3rem; }
-    .script-panel .dialogue { padding-left: 2rem; color: #e2e8f0; }
-
-    /* Prediction panel */
-    .pred-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .pred-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.3rem; text-align: center;
+    .tab-btn {
+      padding:0.75rem 1.2rem; font-family:var(--font); font-size:0.85rem; font-weight:600;
+      color:var(--text3); background:none; border:none; border-bottom:2px solid transparent;
+      cursor:pointer; transition:all 0.2s;
     }
-    .pred-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-    .pred-value { font-size: 1.7rem; font-weight: 800; }
-    .pred-range { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
+    .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); }
+
+    /* Tab Content */
+    .tab-content { display:none; padding:2rem; max-width:1200px; margin:0 auto; }
+    .tab-content.active { display:block; }
+
+    /* Scenes */
+    .scenes-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:1rem; }
+    .scene-card {
+      background:var(--card); border:1px solid var(--border); border-radius:16px;
+      overflow:hidden; cursor:pointer; transition:all 0.2s;
+    }
+    .scene-card:hover { border-color:rgba(240,180,41,0.3); transform:translateY(-2px); }
+    .scene-video {
+      width:100%; height:160px; object-fit:cover; background:#0d0d1a;
+      display:flex; align-items:center; justify-content:center; font-size:2rem;
+    }
+    .scene-video video { width:100%; height:100%; object-fit:cover; }
+    .scene-info { padding:1rem; }
+    .scene-num { font-size:0.7rem; color:var(--text3); text-transform:uppercase; letter-spacing:0.1em; }
+    .scene-title { font-family:var(--font); font-size:1rem; font-weight:700; margin:0.2rem 0; }
+    .scene-desc { font-size:0.78rem; color:var(--text2); line-height:1.5; }
+    .scene-actions { padding:0.75rem 1rem; border-top:1px solid var(--border); display:flex; gap:0.5rem; }
+    .scene-btn {
+      flex:1; padding:0.4rem; border-radius:8px; font-size:0.75rem; font-weight:600;
+      cursor:pointer; border:none; transition:all 0.2s;
+    }
+    .scene-btn.generate { background:rgba(240,180,41,0.1); color:var(--gold); }
+    .scene-btn.view { background:rgba(6,214,160,0.1); color:var(--green); }
+    .add-scene-card {
+      background:var(--card); border:2px dashed var(--border); border-radius:16px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      height:280px; cursor:pointer; transition:all 0.2s; gap:0.75rem;
+    }
+    .add-scene-card:hover { border-color:rgba(240,180,41,0.4); }
+    .add-icon { font-size:2rem; color:var(--text3); }
+
+    /* Casting */
+    .cast-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:1rem; }
+    .cast-card {
+      background:var(--card); border:1px solid var(--border); border-radius:16px;
+      padding:1.2rem; text-align:center; cursor:pointer; transition:all 0.2s;
+    }
+    .cast-card:hover { border-color:rgba(240,180,41,0.3); }
+    .cast-avatar {
+      width:70px; height:70px; border-radius:50%; margin:0 auto 0.75rem;
+      background:linear-gradient(135deg, var(--gold), var(--purple));
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.5rem; font-weight:700;
+    }
+    .cast-name { font-family:var(--font); font-size:0.9rem; font-weight:700; margin-bottom:0.2rem; }
+    .cast-role { font-size:0.75rem; color:var(--text2); }
+    .cast-award { font-size:0.7rem; color:var(--gold); margin-top:0.3rem; }
+
+    /* Music */
+    .music-player {
+      background:var(--card); border:1px solid var(--border); border-radius:20px;
+      padding:1.5rem; margin-bottom:1rem;
+    }
+    .music-info { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
+    .music-icon { width:50px; height:50px; border-radius:12px; background:linear-gradient(135deg, var(--purple), var(--gold)); display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+    .music-title { font-family:var(--font); font-size:1rem; font-weight:700; }
+    .music-style { font-size:0.78rem; color:var(--text2); }
+    .music-controls { display:flex; align-items:center; gap:1rem; }
+    .play-btn {
+      width:44px; height:44px; border-radius:50%;
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      border:none; color:#1a0a00; font-size:1.1rem; cursor:pointer; flex-shrink:0;
+    }
+    .music-progress { flex:1; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+    .music-progress-fill { height:100%; background:var(--gold); width:0%; border-radius:2px; }
+
+    /* Scenario */
+    .scenario-section { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1rem; }
+    .scenario-text { font-size:0.88rem; color:var(--text2); line-height:1.8; white-space:pre-wrap; }
+
+    /* Generate Modal */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); display:none; align-items:center; justify-content:center; z-index:200; backdrop-filter:blur(10px); }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--card); border:1px solid rgba(240,180,41,0.2); border-radius:20px; padding:2rem; max-width:500px; width:90%; }
+    .modal h3 { font-family:var(--font); font-size:1.4rem; margin-bottom:1rem; }
+    .modal-field { margin-bottom:1rem; }
+    .modal-field label { font-size:0.75rem; color:var(--text2); text-transform:uppercase; letter-spacing:0.1em; display:block; margin-bottom:0.4rem; }
+    .modal-field input, .modal-field textarea, .modal-field select {
+      width:100%; background:rgba(255,255,255,0.03); border:1px solid var(--border);
+      border-radius:var(--r); color:var(--text); font-family:var(--body);
+      font-size:0.9rem; padding:0.75rem 1rem; outline:none;
+    }
+    .modal-field textarea { min-height:80px; resize:vertical; }
+    .modal-actions { display:flex; gap:1rem; margin-top:1.5rem; }
+    .modal-btn { flex:1; padding:0.85rem; border-radius:var(--r); font-family:var(--font); font-size:0.9rem; font-weight:700; cursor:pointer; border:none; }
+    .modal-btn.primary { background:linear-gradient(135deg, var(--gold), var(--gold2)); color:#1a0a00; }
+    .modal-btn.secondary { background:rgba(255,255,255,0.05); color:var(--text2); }
+
+    @media(max-width:768px) {
+      .hero-inner { flex-direction:column; }
+      .film-poster { width:140px; height:200px; }
+      nav { padding:1rem; }
+      .nav-links { display:none; }
+    }
   </style>
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="nav-brand">
-      <span class="logo-icon">◈</span>
-      <span class="logo-text">MIRAGE <span class="accent">STUDIOS</span></span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="../index.html">Accueil</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="project_view.html" style="color:var(--text-primary)">Projets</a></li>
-    </ul>
-  </nav>
-
-  <div class="project-page">
-
-    <div class="breadcrumb">
-      <a href="dashboard.html">Dashboard</a> / <a href="#">Projets</a> / Mirage — L'Éveil
-    </div>
-
-    <!-- Project Hero -->
-    <div class="project-hero">
-      <div class="project-badge">✨</div>
-      <div class="project-info">
-        <h1>Mirage — L'Éveil</h1>
-        <div class="project-meta">
-          <span class="meta-tag">Fantastique</span>
-          <span class="meta-tag">128 min</span>
-          <span class="meta-tag">Budget : 80M€</span>
-          <span class="meta-tag">Été 2026</span>
-          <span class="meta-tag status-badge status-active">Actif</span>
-        </div>
-        <p class="project-desc">
-          Dans le monde d'Aeloria, un jeune gardien découvre un artefact capable de briser l'équilibre magique.
-          Épopée fantastique en trois actes — IA utilisée pour scénario, VFX et doublage multilingue.
-        </p>
-        <div class="project-actions">
-          <button class="btn-sm btn-primary-sm">▶ Continuer en IA</button>
-          <button class="btn-sm btn-outline-sm">📄 Exporter PDF</button>
-          <button class="btn-sm btn-outline-sm">🎬 Voir VFX</button>
-          <button class="btn-sm btn-outline-sm">📊 Prédiction</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Progress Steps -->
-    <div class="progress-section">
-      <h2>Pipeline de production</h2>
-      <div class="steps-grid">
-        <div class="step-card done">
-          <div class="step-icon">📝</div>
-          <div class="step-name">Scénario IA</div>
-          <div class="step-pct">100%</div>
-          <div class="step-bar"><div class="step-fill fill-done" style="width:100%"></div></div>
-        </div>
-        <div class="step-card active">
-          <div class="step-icon">🎬</div>
-          <div class="step-name">VFX</div>
-          <div class="step-pct">68%</div>
-          <div class="step-bar"><div class="step-fill fill-active" style="width:68%"></div></div>
-        </div>
-        <div class="step-card active">
-          <div class="step-icon">🎙️</div>
-          <div class="step-name">Doublage</div>
-          <div class="step-pct">45%</div>
-          <div class="step-bar"><div class="step-fill fill-active" style="width:45%"></div></div>
-        </div>
-        <div class="step-card">
-          <div class="step-icon">📊</div>
-          <div class="step-name">Validation ML</div>
-          <div class="step-pct">0%</div>
-          <div class="step-bar"><div class="step-fill fill-pending"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tabs -->
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab(this,'script')">Scénario</div>
-      <div class="tab" onclick="switchTab(this,'prediction')">Prédiction</div>
-      <div class="tab" onclick="switchTab(this,'vfx')">VFX Shots</div>
-    </div>
-
-    <div id="tab-script" class="tab-content active">
-      <div class="script-panel"><span class="scene-heading">INT. TOUR D'IVOIRE — NUIT</span>
-
-<span class="action">La salle de cristal baigne dans une lumière bleue pulsante. AELION (22 ans, regard vif) s'approche d'un artefact suspendu dans le vide.</span>
-
-<span class="character">AELION</span>
-<span class="dialogue">C'est... ça que les Gardiens cachaient depuis cent ans ?</span>
-
-<span class="action">Un grondement sourd. Les cristaux s'emballent. La voix de MORVAR résonne depuis l'ombre.</span>
-
-<span class="character">MORVAR (V.O.)</span>
-<span class="dialogue">Pas caché, jeune naïf. Protégé. Et tu viens de briser la protection.</span>
-
-<span class="action">Aelion saisit l'artefact. Une lumière aveuglante explose dans la salle.</span>
-
-<span class="scene-heading">EXT. CIEL D'AELORIA — CONTINU</span>
-
-<span class="action">Les îles flottantes tremblent. Des fissures lumineuses apparaissent dans le ciel.</span></div>
-    </div>
-
-    <div id="tab-prediction" class="tab-content">
-      <div class="pred-grid">
-        <div class="pred-card">
-          <div class="pred-label">Box Office (estimation)</div>
-          <div class="pred-value" style="color: var(--accent)">280M€</div>
-          <div class="pred-range">Fourchette : 168M — 420M€</div>
-        </div>
-        <div class="pred-card">
-          <div class="pred-label">ROI estimé</div>
-          <div class="pred-value" style="color: #4ade80">+250%</div>
-          <div class="pred-range">Budget : 80M€</div>
-        </div>
-        <div class="pred-card">
-          <div class="pred-label">Potentiel streaming</div>
-          <div class="pred-value" style="color: #60a5fa">8.4/10</div>
-          <div class="pred-range">Netflix, Prime, Canal+</div>
-        </div>
-        <div class="pred-card">
-          <div class="pred-label">Niveau de risque</div>
-          <div class="pred-value" style="color: #4ade80">Faible</div>
-          <div class="pred-range">Franchise établie</div>
-        </div>
-        <div class="pred-card">
-          <div class="pred-label">Audience primaire</div>
-          <div class="pred-value" style="font-size:1.2rem; color: var(--text-primary)">18–40 ans</div>
-          <div class="pred-range">30.5M spectateurs potentiels</div>
-        </div>
-        <div class="pred-card">
-          <div class="pred-label">Fenêtre de sortie</div>
-          <div class="pred-value" style="font-size:1.2rem; color: #fb923c">Été</div>
-          <div class="pred-range">Multiplicateur ×1.35</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="tab-vfx" class="tab-content">
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;">
-        <div class="panel">
-          <div style="padding:1rem; background: rgba(124,92,252,0.05);">
-            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem;">SC042 · BACKGROUND</div>
-            <div style="font-size:0.88rem; font-weight:600;">Tour d'Ivoire — Nuit</div>
-            <div style="font-size:0.75rem; color: #4ade80; margin-top:0.4rem;">✓ Rendu 1920×1080</div>
-          </div>
-        </div>
-        <div class="panel">
-          <div style="padding:1rem; background: rgba(124,92,252,0.05);">
-            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem;">SC043 · VFX PARTICLE</div>
-            <div style="font-size:0.88rem; font-weight:600;">Activation de l'artefact</div>
-            <div style="font-size:0.75rem; color: #fb923c; margin-top:0.4rem;">⟳ En cours — 68%</div>
-          </div>
-        </div>
-        <div class="panel">
-          <div style="padding:1rem; background: rgba(124,92,252,0.05);">
-            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem;">SC044 · COLOR GRADE</div>
-            <div style="font-size:0.88rem; font-weight:600;">Ciel fissuré — Aeloria</div>
-            <div style="font-size:0.75rem; color: var(--text-muted); margin-top:0.4rem;">○ En attente</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+<nav>
+  <div class="nav-logo">◈ MIRAGE STUDIOS</div>
+  <div class="nav-links">
+    <a href="/studio" class="nav-link">🎬 Studio</a>
+    <a href="/project" class="nav-link active">📋 Projet</a>
+    <a href="/sales" class="nav-link">💰 Tarifs</a>
   </div>
+  <button class="btn-new" onclick="openNewProject()">+ Nouveau Film</button>
+</nav>
 
-  <script src="../static/main.js"></script>
-  <script>
-    function switchTab(el, tabId) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('tab-' + tabId).classList.add('active');
-    }
-  </script>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="film-poster" id="film-poster">🎬</div>
+    <div class="film-info">
+      <div class="film-genre-badge" id="film-genre">Fantastique</div>
+      <div class="film-title" id="film-title">Mon Film IA</div>
+      <div class="film-title-ar" id="film-title-ar"></div>
+      <div class="film-meta">
+        <div class="meta-item">🎬 <span id="scenes-count">0 scènes</span></div>
+        <div class="meta-item">⏱ <span id="duration">0 min</span></div>
+        <div class="meta-item">🌍 <span id="film-lang">Français</span></div>
+        <div class="meta-item">👥 <span id="cast-count">0 acteurs</span></div>
+      </div>
+      <div class="film-synopsis" id="film-synopsis">Décrivez votre film ou générez un synopsis automatiquement avec l'IA.</div>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="generateSynopsis()">🤖 Générer Synopsis IA</button>
+        <button class="btn-outline" onclick="openNewScene()">+ Ajouter Scène</button>
+        <button class="btn-outline" onclick="exportProject()">📥 Exporter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-section">
+  <div class="section-title">Avancement du projet</div>
+  <div class="progress-grid">
+    <div class="progress-card">
+      <div class="progress-label">📝 Scénario</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-scenario" style="width:0%"></div></div>
+      <div class="progress-pct" id="pct-scenario">0%</div>
+    </div>
+    <div class="progress-card">
+      <div class="progress-label">🎬 Vidéos générées</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-video" style="width:0%"></div></div>
+      <div class="progress-pct" id="pct-video">0%</div>
+    </div>
+    <div class="progress-card">
+      <div class="progress-label">👥 Casting</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-cast" style="width:0%"></div></div>
+      <div class="progress-pct" id="pct-cast">0%</div>
+    </div>
+    <div class="progress-card">
+      <div class="progress-label">🎵 Musique</div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-music" style="width:0%"></div></div>
+      <div class="progress-pct" id="pct-music">0%</div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-nav">
+  <button class="tab-btn active" onclick="switchTab('scenes', this)">🎬 Scènes</button>
+  <button class="tab-btn" onclick="switchTab('casting', this)">👥 Casting</button>
+  <button class="tab-btn" onclick="switchTab('music', this)">🎵 Musique</button>
+  <button class="tab-btn" onclick="switchTab('scenario', this)">📝 Scénario</button>
+</div>
+
+<!-- SCENES TAB -->
+<div class="tab-content active" id="tab-scenes">
+  <div class="scenes-grid" id="scenes-grid">
+    <div class="add-scene-card" onclick="openNewScene()">
+      <div class="add-icon">+</div>
+      <div style="font-size:0.85rem;color:var(--text3)">Ajouter une scène</div>
+    </div>
+  </div>
+</div>
+
+<!-- CASTING TAB -->
+<div class="tab-content" id="tab-casting">
+  <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+    <div class="section-title">Distribution du film</div>
+    <button class="btn-primary" onclick="generateCasting()">🤖 Générer Casting IA</button>
+  </div>
+  <div class="cast-grid" id="cast-grid">
+    <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text3)">
+      Aucun acteur — cliquez sur "Générer Casting IA"
+    </div>
+  </div>
+</div>
+
+<!-- MUSIC TAB -->
+<div class="tab-content" id="tab-music">
+  <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+    <div class="section-title">Bande originale</div>
+    <button class="btn-primary" onclick="generateMusic()">🎵 Générer Musique IA</button>
+  </div>
+  <div id="music-container">
+    <div style="text-align:center;padding:3rem;color:var(--text3)">
+      Aucune musique — cliquez sur "Générer Musique IA"
+    </div>
+  </div>
+</div>
+
+<!-- SCENARIO TAB -->
+<div class="tab-content" id="tab-scenario">
+  <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center">
+    <div class="section-title">Scénario complet</div>
+    <button class="btn-primary" onclick="generateFullScenario()">🤖 Générer Scénario IA</button>
+  </div>
+  <div class="scenario-section">
+    <div class="scenario-text" id="scenario-text">
+      Cliquez sur "Générer Scénario IA" pour créer automatiquement votre scénario complet.
+    </div>
+  </div>
+</div>
+
+<!-- NEW SCENE MODAL -->
+<div class="modal-overlay" id="scene-modal">
+  <div class="modal">
+    <h3>🎬 Nouvelle Scène</h3>
+    <div class="modal-field">
+      <label>Titre de la scène</label>
+      <input type="text" id="scene-title" placeholder="Ex: Rencontre dans la médina">
+    </div>
+    <div class="modal-field">
+      <label>Description</label>
+      <textarea id="scene-desc" placeholder="Décrivez la scène..."></textarea>
+    </div>
+    <div class="modal-field">
+      <label>Prompt vidéo IA</label>
+      <textarea id="scene-prompt" placeholder="Ex: Médina marocaine animée, lumière dorée, cinématique 4K"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" onclick="closeModal('scene-modal')">Annuler</button>
+      <button class="modal-btn primary" onclick="addScene()">Ajouter la scène</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW PROJECT MODAL -->
+<div class="modal-overlay" id="project-modal">
+  <div class="modal">
+    <h3>🎬 Nouveau Projet Film</h3>
+    <div class="modal-field">
+      <label>Titre du film</label>
+      <input type="text" id="proj-title" placeholder="Le titre de votre film">
+    </div>
+    <div class="modal-field">
+      <label>Titre en arabe (optionnel)</label>
+      <input type="text" id="proj-title-ar" placeholder="عنوان الفيلم" style="direction:rtl">
+    </div>
+    <div class="modal-field">
+      <label>Genre</label>
+      <select id="proj-genre">
+        <option value="fantastique">Fantastique</option>
+        <option value="thriller">Thriller</option>
+        <option value="drame">Drame</option>
+        <option value="comedie">Comédie</option>
+        <option value="action">Action</option>
+        <option value="romantique">Romantique</option>
+        <option value="historique">Historique</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Langue principale</label>
+      <select id="proj-lang">
+        <option value="fr">Français</option>
+        <option value="ar">Arabe</option>
+        <option value="en">Anglais</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" onclick="closeModal('project-modal')">Annuler</button>
+      <button class="modal-btn primary" onclick="createProject()">Créer le projet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = 'http://localhost:5001';
+  let project = JSON.parse(localStorage.getItem('mirage_project') || '{"title":"Mon Film IA","genre":"fantastique","language":"fr","scenes":[],"cast":[],"music":[],"synopsis":""}');
+
+  function init() {
+    updateUI();
+    renderScenes();
+    renderCasting();
+  }
+
+  function updateUI() {
+    document.getElementById('film-title').textContent = project.title || 'Mon Film IA';
+    document.getElementById('film-title-ar').textContent = project.title_ar || '';
+    document.getElementById('film-genre').textContent = project.genre || 'Fantastique';
+    document.getElementById('film-synopsis').textContent = project.synopsis || 'Décrivez votre film ou générez un synopsis automatiquement.';
+    document.getElementById('scenes-count').textContent = `${project.scenes?.length || 0} scènes`;
+    document.getElementById('cast-count').textContent = `${project.cast?.length || 0} acteurs`;
+    const duration = Math.round((project.scenes?.length || 0) * 0.5);
+    document.getElementById('duration').textContent = `${duration} min`;
+
+    const scenePct = Math.min(100, (project.synopsis ? 50 : 0) + (project.scenes?.length || 0) * 5);
+    const videoPct = Math.min(100, (project.scenes?.filter(s => s.video_url).length || 0) / Math.max(1, project.scenes?.length || 1) * 100);
+    const castPct = Math.min(100, (project.cast?.length || 0) * 15);
+    const musicPct = project.music?.length > 0 ? 100 : 0;
+
+    setProgress('scenario', scenePct);
+    setProgress('video', videoPct);
+    setProgress('cast', castPct);
+    setProgress('music', musicPct);
+  }
+
+  function setProgress(id, pct) {
+    document.getElementById(`prog-${id}`).style.width = pct + '%';
+    document.getElementById(`pct-${id}`).textContent = Math.round(pct) + '%';
+  }
+
+  function save() {
+    localStorage.setItem('mirage_project', JSON.stringify(project));
+    updateUI();
+  }
+
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+  }
+
+  function openNewScene() { document.getElementById('scene-modal').classList.add('open'); }
+  function openNewProject() { document.getElementById('project-modal').classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function createProject() {
+    project.title = document.getElementById('proj-title').value || 'Mon Film IA';
+    project.title_ar = document.getElementById('proj-title-ar').value || '';
+    project.genre = document.getElementById('proj-genre').value;
+    project.language = document.getElementById('proj-lang').value;
+    project.scenes = [];
+    project.cast = [];
+    project.music = [];
+    project.synopsis = '';
+    save();
+    closeModal('project-modal');
+  }
+
+  function addScene() {
+    const title = document.getElementById('scene-title').value;
+    const desc = document.getElementById('scene-desc').value;
+    const prompt = document.getElementById('scene-prompt').value;
+    if (!title) { alert('Titre requis'); return; }
+    project.scenes.push({
+      id: Date.now(), number: project.scenes.length + 1,
+      title, description: desc, prompt, video_url: null
+    });
+    save();
+    renderScenes();
+    closeModal('scene-modal');
+    document.getElementById('scene-title').value = '';
+    document.getElementById('scene-desc').value = '';
+    document.getElementById('scene-prompt').value = '';
+  }
+
+  function renderScenes() {
+    const grid = document.getElementById('scenes-grid');
+    const scenes = project.scenes || [];
+    grid.innerHTML = scenes.map(s => `
+      <div class="scene-card">
+        <div class="scene-video">
+          ${s.video_url ? `<video src="${s.video_url}" muted loop onmouseenter="this.play()" onmouseleave="this.pause()"></video>` : '🎬'}
+        </div>
+        <div class="scene-info">
+          <div class="scene-num">Scène ${s.number}</div>
+          <div class="scene-title">${s.title}</div>
+          <div class="scene-desc">${s.description || ''}</div>
+        </div>
+        <div class="scene-actions">
+          <button class="scene-btn generate" onclick="generateSceneVideo(${s.id})">⚡ Générer</button>
+          ${s.video_url ? `<button class="scene-btn view" onclick="viewVideo('${s.video_url}')">▶ Voir</button>` : ''}
+        </div>
+      </div>
+    `).join('') + `
+      <div class="add-scene-card" onclick="openNewScene()">
+        <div class="add-icon">+</div>
+        <div style="font-size:0.85rem;color:var(--text3)">Ajouter une scène</div>
+      </div>
+    `;
+  }
+
+  async function generateSceneVideo(sceneId) {
+    const scene = project.scenes.find(s => s.id === sceneId);
+    if (!scene || !scene.prompt) { alert('Ajoutez un prompt vidéo à la scène'); return; }
+    const token = localStorage.getItem('mirage_token');
+    try {
+      const res = await fetch(`${API}/api/video/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ prompt: scene.prompt, duration_seconds: 5 })
+      });
+      const data = await res.json();
+      if (data.prediction_id) {
+        alert(`Génération lancée ! ID: ${data.prediction_id}\nVérifiez dans quelques minutes.`);
+        pollSceneVideo(sceneId, data.prediction_id);
+      }
+    } catch(e) { alert('Erreur de génération'); }
+  }
+
+  async function pollSceneVideo(sceneId, taskId) {
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${API}/api/video/check/${taskId}`);
+        const data = await res.json();
+        if (data.status === 'succeeded' && data.video_url) {
+          clearInterval(interval);
+          const scene = project.scenes.find(s => s.id === sceneId);
+          if (scene) { scene.video_url = data.video_url; save(); renderScenes(); }
+        }
+      } catch(e) { clearInterval(interval); }
+    }, 5000);
+  }
+
+  function viewVideo(url) {
+    window.open(url, '_blank');
+  }
+
+  async function generateCasting() {
+    const token = localStorage.getItem('mirage_token');
+    try {
+      const res = await fetch(`${API}/api/casting/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ title: project.title, genre: project.genre, culture: 'marocain', language: project.language })
+      });
+      const data = await res.json();
+      if (data.casting) {
+        project.cast = [...(data.casting.cast || []), ...(data.casting.crew || [])];
+        save();
+        renderCasting();
+      }
+    } catch(e) { alert('Erreur casting'); }
+  }
+
+  function renderCasting() {
+    const grid = document.getElementById('cast-grid');
+    const cast = project.cast || [];
+    if (!cast.length) return;
+    grid.innerHTML = cast.map(m => `
+      <div class="cast-card">
+        <div class="cast-avatar">${m.name?.charAt(0) || '?'}</div>
+        <div class="cast-name">${m.name}</div>
+        <div class="cast-role">${m.role}</div>
+        ${m.awards?.length ? `<div class="cast-award">🏆 ${m.awards[0]}</div>` : ''}
+      </div>
+    `).join('');
+  }
+
+  async function generateMusic() {
+    const token = localStorage.getItem('mirage_token');
+    const style = project.genre || 'fantastique';
+    try {
+      const res = await fetch(`${API}/api/music/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ style, duration_seconds: 30, film_title: project.title })
+      });
+      const data = await res.json();
+      if (data.prediction_id) {
+        project.music = [{ id: data.prediction_id, style, status: 'generating' }];
+        save();
+        document.getElementById('music-container').innerHTML = `<div class="music-player"><div class="music-info"><div class="music-icon">🎵</div><div><div class="music-title">Musique ${style}</div><div class="music-style">Génération en cours...</div></div></div></div>`;
+      }
+    } catch(e) { alert('Erreur musique'); }
+  }
+
+  async function generateSynopsis() {
+    const token = localStorage.getItem('mirage_token');
+    try {
+      const res = await fetch(`${API}/api/scenario/synopsis`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ title: project.title, genre: project.genre, language: project.language })
+      });
+      const data = await res.json();
+      if (data.synopsis) {
+        project.synopsis = data.synopsis;
+        save();
+        document.getElementById('film-synopsis').textContent = data.synopsis;
+      } else {
+        alert(data.error || 'Erreur synopsis');
+      }
+    } catch(e) { alert('Erreur de connexion'); }
+  }
+
+  async function generateFullScenario() {
+    const token = localStorage.getItem('mirage_token');
+    try {
+      document.getElementById('scenario-text').textContent = 'Génération en cours...';
+      const res = await fetch(`${API}/api/scenario/full`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ title: project.title, genre: project.genre, language: project.language, synopsis: project.synopsis, scenes_count: 10 })
+      });
+      const data = await res.json();
+      if (data.scenario) {
+        const s = data.scenario;
+        let text = `TITRE: ${s.title}\nGENRE: ${s.genre}\n\nPERSONNAGES:\n`;
+        (s.characters || []).forEach(c => { text += `• ${c.name} — ${c.role}: ${c.description}\n`; });
+        text += '\nSCÈNES:\n';
+        (s.scenes || []).forEach(sc => {
+          text += `\n[Scène ${sc.number}] ${sc.title}\nLieu: ${sc.location} | ${sc.time}\n${sc.description}\n`;
+          (sc.dialogues || []).forEach(d => { text += `${d.character}: "${d.text}"\n`; });
+        });
+        project.fullScenario = text;
+        save();
+        document.getElementById('scenario-text').textContent = text;
+      } else {
+        document.getElementById('scenario-text').textContent = data.error || 'Erreur';
+      }
+    } catch(e) { document.getElementById('scenario-text').textContent = 'Erreur de connexion'; }
+  }
+
+  function exportProject() {
+    const data = JSON.stringify(project, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${project.title}-mirage.json`;
+    a.click();
+  }
+
+  init();
+</script>
 </body>
 </html>
